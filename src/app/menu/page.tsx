@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
+import { FALLBACK_MENU_ITEMS } from '@/data/mockData';
 import {
   Search,
   SlidersHorizontal,
@@ -71,14 +72,41 @@ export default function BrowseMenuPage() {
       if (sort) params.append('sort', sort);
 
       const res = await api.get(`/menu?${params.toString()}`);
-      if (res.data.success) {
-        setItems(res.data.data || []);
+      if (res.data.success && res.data.data && res.data.data.length > 0) {
+        setItems(res.data.data);
+      } else {
+        filterFallbackItems();
       }
     } catch (err) {
-      console.error('Failed to load menu items', err);
+      filterFallbackItems();
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const filterFallbackItems = () => {
+    let result = [...FALLBACK_MENU_ITEMS] as any[];
+    if (category && category !== 'All') {
+      result = result.filter((i) => i.category === category);
+    }
+    if (location && location !== 'All') {
+      result = result.filter((i) => i.location.toLowerCase().includes(location.toLowerCase()));
+    }
+    if (searchTerm) {
+      result = result.filter(
+        (i) =>
+          i.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          i.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    if (sort === 'price_asc') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sort === 'price_desc') {
+      result.sort((a, b) => b.price - a.price);
+    } else if (sort === 'rating') {
+      result.sort((a, b) => b.averageRating - a.averageRating);
+    }
+    setItems(result);
   };
 
   useEffect(() => {

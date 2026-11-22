@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
+import { FALLBACK_MENU_ITEMS } from '@/data/mockData';
 import {
   MapPin,
   Star,
@@ -89,15 +90,23 @@ export default function ItemDetailsPage() {
     const fetchItemDetails = async () => {
       try {
         const res = await api.get(`/menu/${id}`);
-        if (res.data.success) {
+        if (res.data.success && res.data.data) {
           setItem(res.data.data);
           setSelectedImage(res.data.data.images[0] || '');
+        } else {
+          loadFallback();
         }
       } catch (err: any) {
-        setErrorMsg(err.response?.data?.message || 'Invalid menu item ID or item not found.');
+        loadFallback();
       } finally {
         setIsLoading(false);
       }
+    };
+
+    const loadFallback = () => {
+      const found = FALLBACK_MENU_ITEMS.find((i) => i._id === id) || FALLBACK_MENU_ITEMS[0];
+      setItem(found as any);
+      setSelectedImage(found.images[0] || '');
     };
 
     const fetchReviews = async () => {

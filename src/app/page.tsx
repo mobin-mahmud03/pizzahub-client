@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import api from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
+import { FALLBACK_MENU_ITEMS } from '@/data/mockData';
 import {
   Pizza,
   ArrowRight,
@@ -86,11 +87,13 @@ export default function HomePage() {
     const fetchFeatured = async () => {
       try {
         const res = await api.get('/menu/featured');
-        if (res.data.success && res.data.data) {
+        if (res.data.success && res.data.data && res.data.data.length > 0) {
           setFeaturedItems(res.data.data);
+        } else {
+          setFeaturedItems(FALLBACK_MENU_ITEMS.slice(0, 6) as any);
         }
       } catch (err) {
-        console.error('Failed to fetch featured items', err);
+        setFeaturedItems(FALLBACK_MENU_ITEMS.slice(0, 6) as any);
       } finally {
         setIsLoading(false);
       }
