@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -7,7 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { CheckCircle2, Award, ArrowRight } from 'lucide-react';
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const { refreshUser } = useAuth();
@@ -59,5 +61,20 @@ export default function PaymentSuccessPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="max-w-md mx-auto px-4 py-20 text-center space-y-3">
+          <div className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-muted-foreground">Confirming transaction...</p>
+        </div>
+      }
+    >
+      <PaymentSuccessContent />
+    </React.Suspense>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -48,7 +50,7 @@ const CATEGORIES = [
   'Beverages & Desserts',
 ];
 
-export default function BrowseMenuPage() {
+function MenuContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
@@ -342,5 +344,20 @@ export default function BrowseMenuPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function BrowseMenuPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="max-w-7xl mx-auto px-4 py-20 text-center space-y-3">
+          <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-muted-foreground font-semibold">Loading artisanal menu...</p>
+        </div>
+      }
+    >
+      <MenuContent />
+    </React.Suspense>
   );
 }
