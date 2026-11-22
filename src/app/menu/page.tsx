@@ -53,8 +53,8 @@ export default function BrowseMenuPage() {
   const searchParams = useSearchParams();
   const { user } = useAuth();
 
-  const [items, setItems] = useState<MenuItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [items, setItems] = useState<MenuItem[]>(FALLBACK_MENU_ITEMS as any);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Filter & Search states
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');

@@ -80,8 +80,8 @@ const CATEGORIES = [
 ];
 
 export default function HomePage() {
-  const [featuredItems, setFeaturedItems] = useState<MenuItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [featuredItems, setFeaturedItems] = useState<MenuItem[]>(FALLBACK_MENU_ITEMS.slice(0, 6) as any);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchFeatured = async () => {
