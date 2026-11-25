@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/a
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 2000, // Fast 2s timeout so client never hangs if DB is offline
+  timeout: 60000, // Servers on free hosting cold start slowly
   headers: {
     'Content-Type': 'application/json',
   },
