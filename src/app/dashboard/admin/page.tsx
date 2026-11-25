@@ -56,8 +56,9 @@ export default function AdminDashboardPage() {
       if (res.data.success) {
         setStats(res.data.data);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load stats', err);
+      toast.error('Failed to load dashboard statistics.');
     }
   };
 
@@ -71,8 +72,9 @@ export default function AdminDashboardPage() {
       if (res.data.success) {
         setUsers(res.data.data || []);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load users', err);
+      toast.error('Failed to load users list.');
     }
   };
 
@@ -86,8 +88,9 @@ export default function AdminDashboardPage() {
       if (res.data.success) {
         setMenuItems(res.data.data || []);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load menu items', err);
+      toast.error('Failed to load menu items.');
     }
   };
 
@@ -97,8 +100,9 @@ export default function AdminDashboardPage() {
       if (res.data.success) {
         setTransactions(res.data.data || []);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load transactions', err);
+      toast.error('Failed to load transactions.');
     }
   };
 
@@ -148,19 +152,28 @@ export default function AdminDashboardPage() {
   };
 
   // Delete item
-  const handleDeleteItem = async (itemId: string) => {
-    if (!confirm('Are you sure you want to permanently delete this menu item?')) return;
-
-    try {
-      const res = await api.delete(`/admin/menu-items/${itemId}`);
-      if (res.data.success) {
-        toast.success('Menu item deleted.');
-        fetchMenuItems();
-        fetchStats();
-      }
-    } catch (err: any) {
-      toast.error('Failed to delete menu item.');
-    }
+  const handleDeleteItem = (itemId: string) => {
+    toast('Are you sure you want to permanently delete this menu item?', {
+      action: {
+        label: 'Delete',
+        onClick: async () => {
+          try {
+            const res = await api.delete(`/admin/menu-items/${itemId}`);
+            if (res.data.success) {
+              toast.success('Menu item deleted.');
+              fetchMenuItems();
+              fetchStats();
+            }
+          } catch (err: any) {
+            toast.error(err.response?.data?.message || 'Failed to delete menu item.');
+          }
+        },
+      },
+      cancel: {
+        label: 'Cancel',
+        onClick: () => {},
+      },
+    });
   };
 
   return (

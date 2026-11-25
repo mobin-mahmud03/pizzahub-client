@@ -98,8 +98,9 @@ export default function VendorDashboardPage() {
 
       if (itemsRes.data.success) setItems(itemsRes.data.data || []);
       if (ordersRes.data.success) setOrders(ordersRes.data.data || []);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load vendor data', err);
+      toast.error('Failed to load vendor menu and orders.');
     } finally {
       setIsLoading(false);
     }
@@ -179,18 +180,27 @@ export default function VendorDashboardPage() {
   };
 
   // Delete item
-  const handleDeleteItem = async (itemId: string) => {
-    if (!confirm('Are you sure you want to delete this menu item?')) return;
-
-    try {
-      const res = await api.delete(`/menu/${itemId}`);
-      if (res.data.success) {
-        toast.success('Menu item deleted.');
-        fetchVendorData();
-      }
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to delete item.');
-    }
+  const handleDeleteItem = (itemId: string) => {
+    toast('Are you sure you want to delete this menu item?', {
+      action: {
+        label: 'Delete',
+        onClick: async () => {
+          try {
+            const res = await api.delete(`/menu/${itemId}`);
+            if (res.data.success) {
+              toast.success('Menu item deleted.');
+              fetchVendorData();
+            }
+          } catch (err: any) {
+            toast.error(err.response?.data?.message || 'Failed to delete item.');
+          }
+        },
+      },
+      cancel: {
+        label: 'Cancel',
+        onClick: () => {},
+      },
+    });
   };
 
   // Toggle availability (active/inactive)

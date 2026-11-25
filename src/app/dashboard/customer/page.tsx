@@ -56,8 +56,9 @@ export default function CustomerDashboardPage() {
       if (res.data.success) {
         setOrders(res.data.data || []);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load customer orders', err);
+      toast.error('Failed to load customer orders.');
     } finally {
       setIsLoading(false);
     }
@@ -67,21 +68,30 @@ export default function CustomerDashboardPage() {
     fetchOrders();
   }, []);
 
-  const handleCancelOrder = async (orderId: string) => {
-    if (!confirm('Are you sure you want to cancel this pending order?')) return;
-
-    try {
-      const res = await api.patch(`/orders/${orderId}/cancel`);
-      if (res.data.success) {
-        toast.success('Order cancelled successfully.');
-        fetchOrders();
-        if (selectedOrder?._id === orderId) {
-          setSelectedOrder(null);
-        }
-      }
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to cancel order.');
-    }
+  const handleCancelOrder = (orderId: string) => {
+    toast('Are you sure you want to cancel this pending order?', {
+      action: {
+        label: 'Cancel Order',
+        onClick: async () => {
+          try {
+            const res = await api.patch(`/orders/${orderId}/cancel`);
+            if (res.data.success) {
+              toast.success('Order cancelled successfully.');
+              fetchOrders();
+              if (selectedOrder?._id === orderId) {
+                setSelectedOrder(null);
+              }
+            }
+          } catch (err: any) {
+            toast.error(err.response?.data?.message || 'Failed to cancel order.');
+          }
+        },
+      },
+      cancel: {
+        label: 'Keep Order',
+        onClick: () => {},
+      },
+    });
   };
 
   // Overview metrics
