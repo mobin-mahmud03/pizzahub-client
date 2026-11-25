@@ -90,23 +90,32 @@ export default function ItemDetailsPage() {
     const fetchItemDetails = async () => {
       try {
         const res = await api.get(`/menu/${id}`);
-        if (res.data.success && res.data.data) {
+        if (res.data?.success && res.data?.data) {
           setItem(res.data.data);
           setSelectedImage(res.data.data.images[0] || '');
+          setErrorMsg('');
         } else {
-          loadFallback();
+          checkFallbackOrError();
         }
       } catch (err: any) {
-        loadFallback();
+        checkFallbackOrError(err.response?.data?.message);
       } finally {
         setIsLoading(false);
       }
     };
 
-    const loadFallback = () => {
-      const found = FALLBACK_MENU_ITEMS.find((i) => i._id === id) || FALLBACK_MENU_ITEMS[0];
-      setItem(found as any);
-      setSelectedImage(found.images[0] || '');
+    const checkFallbackOrError = (customMsg?: string) => {
+      const found = FALLBACK_MENU_ITEMS.find((i) => i._id === id);
+      if (found) {
+        setItem(found as any);
+        setSelectedImage(found.images[0] || '');
+        setErrorMsg('');
+      } else {
+        const message = customMsg || 'Invalid or unknown menu item. This pizza could not be found.';
+        setErrorMsg(message);
+        setItem(null);
+        toast.error(message);
+      }
     };
 
     const fetchReviews = async () => {
