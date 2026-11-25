@@ -109,7 +109,7 @@ export default function VendorDashboardPage() {
     fetchVendorData();
   }, []);
 
-  // Handle ImgBB image upload simulation / upload
+  // Handle image upload through server
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -118,30 +118,23 @@ export default function VendorDashboardPage() {
     const formData = new FormData();
     formData.append('image', file);
 
-    const imgbbKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY || 'placeholder_imgbb_key';
-
     try {
-      if (imgbbKey && imgbbKey !== 'placeholder_imgbb_key') {
-        const res = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbKey}`, {
-          method: 'POST',
-          body: formData,
-        });
-        const data = await res.json();
-        if (data.data?.url) {
-          setImageUrl(data.data.url);
-          toast.success('Image uploaded to ImgBB!');
-        } else {
-          throw new Error('Upload error');
-        }
+      const res = await api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res.data?.success && res.data?.url) {
+        setImageUrl(res.data.url);
+        toast.success('Image uploaded successfully!');
       } else {
-        // Fallback realistic placeholder for dev preview
-        setImageUrl('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800');
-        toast.info('Using high-definition Unsplash pizza preview image for testing.');
+        throw new Error(res.data?.message || 'Upload error');
       }
-    } catch (err) {
-      // Fallback preview
-      setImageUrl('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800');
-      toast.info('Using high-definition Unsplash preview image.');
+    } catch (err: any) {
+      setImageUrl('');
+      const message = err.response?.data?.message || err.message || 'Image upload failed. Please try again.';
+      toast.error(message);
     } finally {
       setIsUploadingImage(false);
     }
@@ -773,10 +766,10 @@ export default function VendorDashboardPage() {
                 />
               </div>
 
-              {/* Image Upload using ImgBB */}
+              {/* Image Upload */}
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                  Item Image (ImgBB File Upload) *
+                  Item Image *
                 </label>
                 <div className="space-y-2">
                   <input
@@ -785,7 +778,7 @@ export default function VendorDashboardPage() {
                     onChange={handleImageUpload}
                     className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
                   />
-                  {isUploadingImage && <p className="text-xs text-orange-600 animate-pulse">Uploading file to ImgBB...</p>}
+                  {isUploadingImage && <p className="text-xs text-orange-600 animate-pulse">Uploading file to server...</p>}
                   {imageUrl && (
                     <div className="mt-2 flex items-center gap-3 p-2 rounded-xl bg-muted border border-border">
                       <img src={imageUrl} alt="Uploaded preview" className="w-12 h-12 rounded-lg object-cover" />
@@ -805,7 +798,7 @@ export default function VendorDashboardPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={isSubmittingItem}
+                  disabled={isSubmittingItem || isUploadingImage || !imageUrl}
                   className="w-1/2 py-2.5 rounded-xl font-bold text-sm text-white bg-orange-600 hover:bg-orange-700 shadow-md shadow-orange-500/20 disabled:opacity-50"
                 >
                   {isSubmittingItem ? 'Submitting...' : 'Submit Item'}
