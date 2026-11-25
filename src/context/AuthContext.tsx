@@ -59,12 +59,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           localStorage.setItem('pizzahub_user', JSON.stringify(res.data.user));
         }
       }
-    } catch (error) {
-      console.warn('[AuthContext] Session expired or invalid token');
-      localStorage.removeItem('pizzahub_token');
-      localStorage.removeItem('pizzahub_user');
-      setUser(null);
-      setToken(null);
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        console.warn('[AuthContext] Session expired or invalid token');
+        localStorage.removeItem('pizzahub_token');
+        localStorage.removeItem('pizzahub_user');
+        setUser(null);
+        setToken(null);
+      } else {
+        console.warn('[AuthContext] Keeping cached session despite network/server error:', error?.message);
+      }
     } finally {
       setIsLoading(false);
     }
