@@ -171,8 +171,8 @@ The app runs at `http://localhost:3000` by default.
 | Resource | URL |
 |---|---|
 | **Live site** | `<LIVE_SITE_URL>` |
-| **Client repository** | `<CLIENT_REPO_URL>` |
-| **Server repository** | `<SERVER_REPO_URL>` |
+| **Client repository** | https://github.com/mobin-mahmud03/pizzahub-client |
+| **Server repository** | https://github.com/mobin-mahmud03/pizzahub-server |
 
 ---
 
