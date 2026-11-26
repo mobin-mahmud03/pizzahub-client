@@ -1,18 +1,12 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
-
 type T = 'light' | 'dark' | 'system';
-const Ctx = createContext<{ resolvedTheme?: 'light' | 'dark'; setTheme: (t: T) => void }>({
-  setTheme: () => {},
-});
+const Ctx = createContext<{ resolvedTheme?: 'light' | 'dark'; setTheme: (t: T) => void }>({ setTheme: () => {} });
 export const useTheme = () => useContext(Ctx);
-
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [resolvedTheme, setResolved] = useState<'light' | 'dark'>();
   const apply = (t: T) => {
-    const r = t === 'system'
-      ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : t;
+    const r = t === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : t;
     document.documentElement.classList.toggle('dark', r === 'dark');
     document.documentElement.style.colorScheme = r;
     setResolved(r);
