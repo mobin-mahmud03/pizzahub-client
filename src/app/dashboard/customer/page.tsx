@@ -17,6 +17,9 @@ import {
   ChevronRight,
   Store,
 } from 'lucide-react';
+import StatusBadge from '@/components/StatusBadge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 
 interface OrderItem {
   _id: string;
@@ -100,38 +103,6 @@ export default function CustomerDashboardPage() {
   const acceptedCount = orders.filter((o) => o.status === 'accepted').length;
   const rejectedCount = orders.filter((o) => o.status === 'rejected').length;
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400">
-            <Clock className="w-3.5 h-3.5" />
-            <span>Pending</span>
-          </span>
-        );
-      case 'accepted':
-        return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Accepted</span>
-          </span>
-        );
-      case 'rejected':
-        return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400">
-            <XCircle className="w-3.5 h-3.5" />
-            <span>Rejected</span>
-          </span>
-        );
-      default:
-        return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            <span>Cancelled</span>
-          </span>
-        );
-    }
-  };
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
@@ -194,8 +165,19 @@ export default function CustomerDashboardPage() {
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12 text-sm text-muted-foreground">
-            Loading your orders...
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-card border border-border rounded-2xl p-5 shadow-xs flex items-center justify-between gap-5">
+                <div className="flex items-center gap-4 flex-1">
+                  <Skeleton className="w-16 h-16 rounded-xl" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-5 w-48 rounded-md" />
+                    <Skeleton className="h-4 w-32 rounded-md" />
+                  </div>
+                </div>
+                <Skeleton className="h-9 w-24 rounded-xl" />
+              </div>
+            ))}
           </div>
         ) : orders.length === 0 ? (
           <div className="bg-card border border-border p-12 rounded-3xl text-center space-y-3">
@@ -230,7 +212,7 @@ export default function CustomerDashboardPage() {
                       <h3 className="font-bold text-foreground truncate">
                         {order.itemId?.itemName || 'Gourmet Pizza'}
                       </h3>
-                      {getStatusBadge(order.status)}
+                      <StatusBadge status={order.status} />
                     </div>
 
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -302,7 +284,7 @@ export default function CustomerDashboardPage() {
                   Order #{selectedOrder._id.slice(-6)} • {selectedOrder.itemId?.itemName}
                 </p>
               </div>
-              {getStatusBadge(selectedOrder.status)}
+              <StatusBadge status={selectedOrder.status} />
             </div>
 
             {/* Timeline Steps */}

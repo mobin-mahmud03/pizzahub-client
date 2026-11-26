@@ -20,6 +20,8 @@ import {
   RotateCcw,
   Store,
 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 
 interface MenuItem {
   _id: string;
@@ -245,11 +247,13 @@ function MenuContent() {
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="rounded-3xl border border-border bg-card p-4 space-y-4 animate-pulse">
-              <div className="w-full h-52 rounded-2xl bg-muted" />
-              <div className="h-5 bg-muted rounded-md w-3/4" />
-              <div className="h-4 bg-muted rounded-md w-1/2" />
-              <div className="h-10 bg-muted rounded-xl" />
+            <div key={i} className="rounded-3xl border border-border bg-card p-4 space-y-4 h-full flex flex-col justify-between">
+              <Skeleton className="w-full h-52 rounded-2xl" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-5 w-3/4 rounded-md" />
+                <Skeleton className="h-4 w-1/2 rounded-md" />
+              </div>
+              <Skeleton className="h-10 w-full rounded-xl" />
             </div>
           ))}
         </div>
@@ -271,28 +275,28 @@ function MenuContent() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
           {items.map((item) => (
             <div
               key={item._id}
-              className="group flex flex-col justify-between rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:shadow-xl hover:border-red-500/30 transition-all duration-300"
+              className="group flex flex-col justify-between rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:shadow-xl hover:border-red-500/30 transition-all duration-300 h-full"
             >
               {/* Image & Badges */}
-              <div className="relative h-56 w-full overflow-hidden bg-muted">
+              <div className="relative h-56 w-full shrink-0 overflow-hidden bg-muted">
                 <img
                   src={item.images[0] || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800'}
                   alt={item.itemName}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-background/90 backdrop-blur-md text-foreground shadow-xs">
+                  <Badge variant="outline" className="px-3 py-1 rounded-full text-xs font-bold bg-background/90 backdrop-blur-md text-foreground shadow-xs border-transparent">
                     {item.category}
-                  </span>
+                  </Badge>
                   {item.vendorId?.subscriptionPlan === 'premium' && (
-                    <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-xs flex items-center gap-1">
+                    <Badge className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-xs flex items-center gap-1 border-transparent">
                       <Award className="w-3.5 h-3.5" />
                       <span>Premium</span>
-                    </span>
+                    </Badge>
                   )}
                 </div>
 
@@ -304,7 +308,7 @@ function MenuContent() {
 
               {/* Content */}
               <div className="p-6 flex flex-col flex-1 justify-between gap-4">
-                <div>
+                <div className="flex flex-col flex-1">
                   <div className="flex items-center justify-between gap-2 mb-1.5">
                     <h3 className="text-xl font-bold text-foreground group-hover:text-red-600 transition-colors truncate">
                       {item.itemName}
@@ -314,11 +318,11 @@ function MenuContent() {
                     </span>
                   </div>
 
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3 flex-1">
                     {item.description}
                   </p>
 
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t border-border/60">
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t border-border/60 mt-auto">
                     <div className="flex items-center gap-1 truncate">
                       <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" />
                       <span className="truncate">{item.location}</span>

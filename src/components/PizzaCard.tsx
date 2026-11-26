@@ -2,6 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { formatCurrency } from '@/lib/utils';
 import { Star, Award, MapPin, Store } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface PizzaCardProps {
   item: {
@@ -25,22 +28,22 @@ interface PizzaCardProps {
 
 export default function PizzaCard({ item, onActionClick, actionLabel = 'View Details & Order' }: PizzaCardProps) {
   return (
-    <div className="group flex flex-col justify-between rounded-3xl border border-border bg-card overflow-hidden shadow-xs hover:shadow-xl hover:border-red-500/30 transition-all duration-300">
-      <div className="relative h-56 w-full overflow-hidden bg-muted">
+    <Card className="group flex flex-col justify-between rounded-3xl border border-border bg-card overflow-hidden shadow-xs hover:shadow-xl hover:border-red-500/30 transition-all duration-300 h-full p-0 gap-0">
+      <div className="relative h-56 w-full shrink-0 overflow-hidden bg-muted">
         <img
           src={item.images[0] || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800'}
           alt={item.itemName}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-background/90 backdrop-blur-md text-foreground shadow-xs">
+          <Badge variant="outline" className="px-3 py-1 rounded-full text-xs font-bold bg-background/90 backdrop-blur-md text-foreground shadow-xs border-transparent">
             {item.category}
-          </span>
+          </Badge>
           {item.vendorId?.subscriptionPlan === 'premium' && (
-            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-xs flex items-center gap-1">
+            <Badge className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-xs flex items-center gap-1 border-transparent">
               <Award className="w-3.5 h-3.5" />
               <span>Premium</span>
-            </span>
+            </Badge>
           )}
         </div>
 
@@ -51,7 +54,7 @@ export default function PizzaCard({ item, onActionClick, actionLabel = 'View Det
       </div>
 
       <div className="p-6 flex flex-col flex-1 justify-between gap-4">
-        <div>
+        <div className="flex flex-col flex-1">
           <div className="flex items-center justify-between gap-2 mb-1.5">
             <h3 className="text-xl font-bold text-foreground group-hover:text-red-600 transition-colors truncate">
               {item.itemName}
@@ -61,11 +64,11 @@ export default function PizzaCard({ item, onActionClick, actionLabel = 'View Det
             </span>
           </div>
 
-          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">
+          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3 flex-1">
             {item.description}
           </p>
 
-          <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t border-border/60">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground pt-2 border-t border-border/60 mt-auto">
             <div className="flex items-center gap-1 truncate">
               <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" />
               <span className="truncate">{item.location}</span>
@@ -80,21 +83,25 @@ export default function PizzaCard({ item, onActionClick, actionLabel = 'View Det
         </div>
 
         {onActionClick ? (
-          <button
+          <Button
             onClick={onActionClick}
-            className="w-full py-2.5 px-4 rounded-xl font-bold text-sm text-center text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/20 hover:shadow-lg transition-all cursor-pointer"
+            className="w-full py-2.5 px-4 h-auto rounded-xl font-bold text-sm text-center text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/20 hover:shadow-lg transition-all cursor-pointer"
           >
             {actionLabel}
-          </button>
+          </Button>
         ) : (
           <Link
             href={`/menu/${item._id}`}
-            className="w-full py-2.5 px-4 rounded-xl font-bold text-sm text-center text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/20 hover:shadow-lg transition-all"
+            className="w-full"
           >
-            {actionLabel}
+            <Button
+              className="w-full py-2.5 px-4 h-auto rounded-xl font-bold text-sm text-center text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/20 hover:shadow-lg transition-all"
+            >
+              {actionLabel}
+            </Button>
           </Link>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

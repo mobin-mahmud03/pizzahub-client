@@ -6,6 +6,9 @@ import { useAuth, UserRole } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { toast } from 'sonner';
 import { Pizza, Mail, Lock, User as UserIcon, Store, ShoppingBag, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 export default function RegisterPage() {
   const { login } = useAuth();
@@ -114,96 +117,96 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Full Name *
-              </label>
+              </Label>
               <div className="relative">
-                <UserIcon className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                <input
+                <UserIcon className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Mario Rossi"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500 transition-all"
                 />
               </div>
             </div>
 
             {role === 'vendor' && (
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+              <div className="space-y-1.5">
+                <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Restaurant / Business Name *
-                </label>
+                </Label>
                 <div className="relative">
-                  <Store className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                  <input
+                  <Store className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                  <Input
                     type="text"
                     required
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     placeholder="e.g. Mario's Authentic Pizzeria"
-                    className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+                    className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-orange-500 transition-all"
                   />
                 </div>
               </div>
             )}
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Email Address *
-              </label>
+              </Label>
               <div className="relative">
-                <Mail className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                <input
+                <Mail className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500 transition-all"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Password * (min 6 chars, 1 uppercase, 1 lowercase)
-              </label>
+              </Label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                <input
+                <Lock className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 6 chars with Uppercase & lowercase"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500 transition-all"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Profile Image URL (Optional)
-              </label>
+              </Label>
               <div className="relative">
-                <ImageIcon className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                <input
+                <ImageIcon className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
                   type="url"
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500 transition-all"
                 />
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full h-11 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -213,7 +216,7 @@ export default function RegisterPage() {
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
-            </button>
+            </Button>
           </form>
 
           <div className="text-center text-sm text-muted-foreground">

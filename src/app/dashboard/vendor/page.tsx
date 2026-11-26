@@ -24,6 +24,20 @@ import {
   AlertCircle,
   Zap,
 } from 'lucide-react';
+import StatusBadge from '@/components/StatusBadge';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 interface MenuItem {
   _id: string;
@@ -441,26 +455,7 @@ export default function VendorDashboardPage() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-3 left-3">
-                      {item.status === 'approved' && (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500 text-white shadow-xs">
-                          Approved & Active
-                        </span>
-                      )}
-                      {item.status === 'pending' && (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500 text-white shadow-xs">
-                          Pending Admin Review
-                        </span>
-                      )}
-                      {item.status === 'rejected' && (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-500 text-white shadow-xs">
-                          Rejected
-                        </span>
-                      )}
-                      {item.status === 'inactive' && (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-zinc-600 text-white shadow-xs">
-                          Inactive / Paused
-                        </span>
-                      )}
+                      <StatusBadge status={item.status} />
                     </div>
                   </div>
 
@@ -574,9 +569,7 @@ export default function VendorDashboardPage() {
                         </button>
                       </>
                     ) : (
-                      <span className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-muted capitalize text-foreground">
-                        Status: {order.status}
-                      </span>
+                      <StatusBadge status={order.status} />
                     )}
                   </div>
                 </div>
@@ -686,138 +679,137 @@ export default function VendorDashboardPage() {
       )}
 
       {/* ADD MENU ITEM MODAL */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-card border border-border w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            <div>
-              <h3 className="text-2xl font-black text-foreground font-serif tracking-tight">
-                Add New Menu Item
-              </h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Item will have status <span className="font-bold text-amber-500">Pending</span> until approved by Admin
-              </p>
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogContent className="max-w-lg rounded-3xl p-6 sm:p-8 border-border bg-card shadow-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black text-foreground font-serif tracking-tight">
+              Add New Menu Item
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground mt-0.5">
+              Item will have status <span className="font-bold text-amber-500">Pending</span> until approved by Admin
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleAddItemSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Item Name *
+              </Label>
+              <Input
+                type="text"
+                required
+                value={itemName}
+                onChange={(e) => setItemName(e.target.value)}
+                placeholder="e.g. Truffle Mushroom Deluxe"
+                className="h-10 rounded-xl border-input bg-background text-sm text-foreground focus-visible:ring-2 focus-visible:ring-orange-500"
+              />
             </div>
 
-            <form onSubmit={handleAddItemSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                  Item Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
-                  placeholder="e.g. Truffle Mushroom Deluxe"
-                  className="w-full p-2.5 rounded-xl border border-input bg-background text-sm text-foreground focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                    Category *
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-input bg-background text-sm text-foreground focus:ring-2 focus:ring-orange-500"
-                  >
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                    Price ($) *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    required
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    placeholder="18.99"
-                    className="w-full p-2.5 rounded-xl border border-input bg-background text-sm text-foreground focus:ring-2 focus:ring-orange-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                  Restaurant Location / Area *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Downtown Brooklyn, NY"
-                  className="w-full p-2.5 rounded-xl border border-input bg-background text-sm text-foreground focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                  Description *
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="San Marzano tomato sauce, fresh buffalo mozzarella, wild truffles..."
-                  className="w-full p-2.5 rounded-xl border border-input bg-background text-sm text-foreground focus:ring-2 focus:ring-orange-500"
-                />
-              </div>
-
-              {/* Image Upload */}
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                  Item Image *
-                </label>
-                <div className="space-y-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
-                  />
-                  {isUploadingImage && <p className="text-xs text-orange-600 animate-pulse">Uploading file to server...</p>}
-                  {imageUrl && (
-                    <div className="mt-2 flex items-center gap-3 p-2 rounded-xl bg-muted border border-border">
-                      <img src={imageUrl} alt="Uploaded preview" className="w-12 h-12 rounded-lg object-cover" />
-                      <span className="text-xs text-muted-foreground truncate flex-1">{imageUrl}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="w-1/2 py-2.5 rounded-xl border border-border text-sm font-semibold hover:bg-muted"
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Category *
+                </Label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmittingItem || isUploadingImage || !imageUrl}
-                  className="w-1/2 py-2.5 rounded-xl font-bold text-sm text-white bg-orange-600 hover:bg-orange-700 shadow-md shadow-orange-500/20 disabled:opacity-50"
-                >
-                  {isSubmittingItem ? 'Submitting...' : 'Submit Item'}
-                </button>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+
+              <div className="space-y-1.5">
+                <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Price ($) *
+                </Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  required
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="18.99"
+                  className="h-10 rounded-xl border-input bg-background text-sm text-foreground focus-visible:ring-2 focus-visible:ring-orange-500"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Restaurant Location / Area *
+              </Label>
+              <Input
+                type="text"
+                required
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. Downtown Brooklyn, NY"
+                className="h-10 rounded-xl border-input bg-background text-sm text-foreground focus-visible:ring-2 focus-visible:ring-orange-500"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Description *
+              </Label>
+              <Textarea
+                required
+                rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="San Marzano tomato sauce, fresh buffalo mozzarella, wild truffles..."
+                className="rounded-xl border-input bg-background text-sm text-foreground focus-visible:ring-2 focus-visible:ring-orange-500"
+              />
+            </div>
+
+            {/* Image Upload */}
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Item Image *
+              </Label>
+              <div className="space-y-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="h-10 text-xs text-muted-foreground file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                />
+                {isUploadingImage && <p className="text-xs text-orange-600 animate-pulse">Uploading file to server...</p>}
+                {imageUrl && (
+                  <div className="mt-2 flex items-center gap-3 p-2 rounded-xl bg-muted border border-border">
+                    <img src={imageUrl} alt="Uploaded preview" className="w-12 h-12 rounded-lg object-cover" />
+                    <span className="text-xs text-muted-foreground truncate flex-1">{imageUrl}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsAddModalOpen(false)}
+                className="w-1/2 h-10 rounded-xl border-border text-sm font-semibold hover:bg-muted"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmittingItem || isUploadingImage || !imageUrl}
+                className="w-1/2 h-10 rounded-xl font-bold text-sm text-white bg-orange-600 hover:bg-orange-700 shadow-md shadow-orange-500/20 disabled:opacity-50"
+              >
+                {isSubmittingItem ? 'Submitting...' : 'Submit Item'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

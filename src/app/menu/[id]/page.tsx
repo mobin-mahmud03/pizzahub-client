@@ -22,6 +22,18 @@ import {
   Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface MenuItem {
   _id: string;
@@ -406,23 +418,23 @@ export default function ItemDetailsPage() {
             </div>
 
             <div>
-              <textarea
+              <Textarea
                 required
                 rows={3}
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
                 placeholder="How was the crust, sauce, and delivery speed?"
-                className="w-full p-3 rounded-xl border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full p-3 rounded-xl border-input bg-background text-sm text-foreground focus-visible:ring-2 focus-visible:ring-red-500"
               />
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isSubmittingReview}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer"
+              className="px-5 py-2 h-auto rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer"
             >
               {isSubmittingReview ? 'Submitting...' : 'Post Review'}
-            </button>
+            </Button>
           </form>
         )}
 
@@ -452,92 +464,91 @@ export default function ItemDetailsPage() {
       </section>
 
       {/* CUSTOMER ORDER MODAL */}
-      {isOrderModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-card border border-border w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in zoom-in-95 duration-150">
-            <div>
-              <h3 className="text-2xl font-black text-foreground font-serif tracking-tight">
-                Complete Your Food Order
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                Ordering <span className="font-bold text-red-600">{item.itemName}</span> from{' '}
-                <span className="font-semibold text-foreground">{item.vendorId.businessName || item.vendorId.name}</span>
-              </p>
-            </div>
+      <Dialog open={isOrderModalOpen} onOpenChange={setIsOrderModalOpen}>
+        <DialogContent className="max-w-lg rounded-3xl p-6 sm:p-8 border-border bg-card shadow-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black text-foreground font-serif tracking-tight">
+              Complete Your Food Order
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground mt-1">
+              Ordering <span className="font-bold text-red-600">{item.itemName}</span> from{' '}
+              <span className="font-semibold text-foreground">{item.vendorId?.businessName || item.vendorId?.name}</span>
+            </DialogDescription>
+          </DialogHeader>
 
-            <form onSubmit={handleOrderSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-                  Delivery Date *
-                </label>
-                <div className="relative">
-                  <Calendar className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                  <input
-                    type="date"
-                    required
-                    min={new Date().toISOString().split('T')[0]}
-                    value={deliveryDate}
-                    onChange={(e) => setDeliveryDate(e.target.value)}
-                    className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-                  Delivery Address *
-                </label>
-                <div className="relative">
-                  <MapPin className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                  <input
-                    type="text"
-                    required
-                    value={deliveryAddress}
-                    onChange={(e) => setDeliveryAddress(e.target.value)}
-                    placeholder="e.g. 742 Little Italy Way, Apt 3B, Brooklyn, NY"
-                    className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-                  Special Instructions / Additional Message
-                </label>
-                <textarea
-                  rows={3}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="e.g. Extra parmesan cheese, please ring doorbell upon arrival"
-                  className="w-full p-3 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+          <form onSubmit={handleOrderSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Delivery Date *
+              </Label>
+              <div className="relative">
+                <Calendar className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
+                  type="date"
+                  required
+                  min={new Date().toISOString().split('T')[0]}
+                  value={deliveryDate}
+                  onChange={(e) => setDeliveryDate(e.target.value)}
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500"
                 />
               </div>
+            </div>
 
-              <div className="p-3 rounded-2xl bg-muted border border-border/80 flex items-center justify-between text-sm">
-                <span className="font-semibold text-muted-foreground">Total Price:</span>
-                <span className="text-xl font-black text-red-600">{formatCurrency(item.price)}</span>
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Delivery Address *
+              </Label>
+              <div className="relative">
+                <MapPin className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
+                  type="text"
+                  required
+                  value={deliveryAddress}
+                  onChange={(e) => setDeliveryAddress(e.target.value)}
+                  placeholder="e.g. 742 Little Italy Way, Apt 3B, Brooklyn, NY"
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500"
+                />
               </div>
+            </div>
 
-              <div className="flex items-center gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsOrderModalOpen(false)}
-                  className="w-1/2 py-3 rounded-xl border border-border font-semibold text-sm hover:bg-muted transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmittingOrder}
-                  className="w-1/2 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/20 transition-all cursor-pointer disabled:opacity-50"
-                >
-                  {isSubmittingOrder ? 'Submitting...' : 'Confirm Order'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Special Instructions / Additional Message
+              </Label>
+              <Textarea
+                rows={3}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="e.g. Extra parmesan cheese, please ring doorbell upon arrival"
+                className="p-3 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500"
+              />
+            </div>
+
+            <div className="p-3 rounded-2xl bg-muted border border-border/80 flex items-center justify-between text-sm">
+              <span className="font-semibold text-muted-foreground">Total Price:</span>
+              <span className="text-xl font-black text-red-600">{formatCurrency(item.price)}</span>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsOrderModalOpen(false)}
+                className="w-1/2 h-11 rounded-xl border-border font-semibold text-sm hover:bg-muted transition-colors cursor-pointer"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmittingOrder}
+                className="w-1/2 h-11 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/20 transition-all cursor-pointer disabled:opacity-50"
+              >
+                {isSubmittingOrder ? 'Submitting...' : 'Confirm Order'}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

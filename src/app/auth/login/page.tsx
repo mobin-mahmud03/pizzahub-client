@@ -7,6 +7,9 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import { toast } from 'sonner';
 import { Pizza, Mail, Lock, LogIn, ArrowRight, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -85,44 +88,44 @@ export default function LoginPage() {
 
         <div className="bg-card border border-border p-8 rounded-3xl shadow-xl space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Email Address
-              </label>
+              </Label>
               <div className="relative">
-                <Mail className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                <input
+                <Mail className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500 transition-all"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <div className="space-y-1.5">
+              <Label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Password
-              </label>
+              </Label>
               <div className="relative">
-                <Lock className="w-5 h-5 text-muted-foreground absolute left-3.5 top-3" />
-                <input
+                <Lock className="w-5 h-5 text-muted-foreground absolute left-3.5 top-2.5 z-10" />
+                <Input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+                  className="h-10 pl-11 pr-4 rounded-xl border-input bg-background text-foreground text-sm focus-visible:ring-2 focus-visible:ring-red-500 transition-all"
                 />
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full h-11 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -132,7 +135,7 @@ export default function LoginPage() {
                   <span>Sign In</span>
                 </>
               )}
-            </button>
+            </Button>
           </form>
 
           {/* Quick Demo Credentials pill buttons */}

@@ -1,42 +1,41 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from 'next-themes';
 import {
   Pizza,
   Sun,
   Moon,
-  User as UserIcon,
   LayoutDashboard,
   Settings,
   LogOut,
   ChevronDown,
   Menu as MenuIcon,
   X,
-  ShoppingBag,
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const getDashboardLink = () => {
     if (!user) return '/auth/login';
@@ -106,73 +105,58 @@ export default function Navbar() {
 
           {/* User Logged In state */}
           {user ? (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-3 p-1.5 pr-3 rounded-full border border-border hover:bg-muted/80 transition-all cursor-pointer"
-              >
-                {user.image ? (
-                  <img
-                    src={user.image}
-                    alt={user.name}
-                    className="w-8 h-8 rounded-full object-cover border border-red-500/30"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-950 text-red-600 flex items-center justify-center font-bold text-sm">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-3 p-1.5 pr-3 rounded-full border border-border hover:bg-muted/80 transition-all cursor-pointer outline-none">
+                <Avatar className="w-8 h-8 border border-red-500/30">
+                  {user.image && <AvatarImage src={user.image} alt={user.name} />}
+                  <AvatarFallback className="bg-red-100 dark:bg-red-950 text-red-600 font-bold text-sm">
                     {user.name.charAt(0).toUpperCase()}
-                  </div>
-                )}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="text-left">
                   <div className="text-xs font-semibold text-foreground leading-tight">{user.name.split(' ')[0]}</div>
                   <div className="text-[10px] text-muted-foreground capitalize">{user.role}</div>
                 </div>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
-              </button>
+              </DropdownMenuTrigger>
 
-              {/* Profile Dropdown */}
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-card border border-border shadow-xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="px-4 py-2 border-b border-border/60">
-                    <p className="text-sm font-bold text-foreground truncate">{user.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                    <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400">
-                      {user.role}
-                    </span>
-                  </div>
-
-                  <Link
-                    href={getDashboardLink()}
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2 text-sm text-foreground/80 hover:bg-muted transition-colors"
-                  >
-                    <LayoutDashboard className="w-4 h-4 text-red-500" />
-                    Dashboard
-                  </Link>
-
-                  <Link
-                    href="/profile"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2 text-sm text-foreground/80 hover:bg-muted transition-colors"
-                  >
-                    <Settings className="w-4 h-4 text-orange-500" />
-                    Profile Settings
-                  </Link>
-
-                  <div className="border-t border-border/60 my-1"></div>
-
-                  <button
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      logout();
-                    }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors text-left cursor-pointer"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out
-                  </button>
+              <DropdownMenuContent align="end" className="w-56 rounded-2xl bg-card border border-border shadow-xl p-2 z-50">
+                <div className="px-3 py-2 border-b border-border/60">
+                  <p className="text-sm font-bold text-foreground truncate">{user.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  <Badge variant="outline" className="mt-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400 border-transparent">
+                    {user.role}
+                  </Badge>
                 </div>
-              )}
-            </div>
+
+                <DropdownMenuItem
+                  onClick={() => router.push(getDashboardLink())}
+                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors cursor-pointer w-full mt-1"
+                >
+                  <LayoutDashboard className="w-4 h-4 text-red-500" />
+                  <span>Dashboard</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={() => router.push('/profile')}
+                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors cursor-pointer w-full"
+                >
+                  <Settings className="w-4 h-4 text-orange-500" />
+                  <span>Profile Settings</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator className="border-t border-border/60 my-1" />
+
+                <DropdownMenuItem
+                  onClick={() => logout()}
+                  variant="destructive"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-md transition-colors text-left cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             /* Logged Out state */
             <div className="flex items-center gap-3">

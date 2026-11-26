@@ -21,6 +21,16 @@ import {
   Layers,
   FileText,
 } from 'lucide-react';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface AdminStats {
   totalUsers: number;
@@ -370,63 +380,61 @@ export default function AdminDashboardPage() {
 
           {/* Users Table */}
           <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-muted text-muted-foreground font-bold uppercase tracking-wider border-b border-border">
-                  <tr>
-                    <th className="py-3 px-4">User</th>
-                    <th className="py-3 px-4">Role</th>
-                    <th className="py-3 px-4">Subscription</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {users.map((u) => (
-                    <tr key={u._id} className="hover:bg-muted/40 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="font-bold text-foreground">{u.name}</div>
-                        <div className="text-muted-foreground">{u.email}</div>
-                        {u.businessName && <div className="text-orange-600 text-[10px]">{u.businessName}</div>}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="capitalize font-semibold text-foreground/90">{u.role}</span>
-                      </td>
-                      <td className="py-3 px-4 capitalize">
-                        {u.role === 'vendor' ? (
-                          <span className={u.subscriptionPlan === 'premium' ? 'text-amber-500 font-bold' : 'text-muted-foreground'}>
-                            {u.subscriptionPlan}
-                          </span>
-                        ) : (
-                          '—'
-                        )}
-                      </td>
-                      <td className="py-3 px-4">
-                        {u.isBlocked ? (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700">Blocked</span>
-                        ) : (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">Active</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        {u.role !== 'admin' && (
-                          <button
-                            onClick={() => handleToggleBlock(u._id, u.isBlocked)}
-                            className={`px-3 py-1.5 rounded-lg font-bold text-[11px] cursor-pointer transition-colors ${
-                              u.isBlocked
-                                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                                : 'bg-red-100 text-red-700 hover:bg-red-200'
-                            }`}
-                          >
+            <Table className="text-xs">
+              <TableHeader className="bg-muted">
+                <TableRow className="border-b border-border">
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">User</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Role</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Subscription</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Status</TableHead>
+                  <TableHead className="py-3 px-4 text-right text-muted-foreground font-bold uppercase tracking-wider">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-border">
+                {users.map((u) => (
+                  <TableRow key={u._id} className="hover:bg-muted/40 transition-colors">
+                    <TableCell className="py-3 px-4">
+                      <div className="font-bold text-foreground">{u.name}</div>
+                      <div className="text-muted-foreground">{u.email}</div>
+                      {u.businessName && <div className="text-orange-600 text-[10px]">{u.businessName}</div>}
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      <span className="capitalize font-semibold text-foreground/90">{u.role}</span>
+                    </TableCell>
+                    <TableCell className="py-3 px-4 capitalize">
+                      {u.role === 'vendor' ? (
+                        <span className={u.subscriptionPlan === 'premium' ? 'text-amber-500 font-bold' : 'text-muted-foreground'}>
+                          {u.subscriptionPlan}
+                        </span>
+                      ) : (
+                        '—'
+                      )}
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      {u.isBlocked ? (
+                        <Badge variant="outline" className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700 border-red-200">Blocked</Badge>
+                      ) : (
+                        <Badge variant="outline" className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border-emerald-200">Active</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-right">
+                      {u.role !== 'admin' && (
+                        <button
+                          onClick={() => handleToggleBlock(u._id, u.isBlocked)}
+                          className={`px-3 py-1.5 rounded-lg font-bold text-[11px] cursor-pointer transition-colors ${
+                            u.isBlocked
+                              ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                              : 'bg-red-100 text-red-700 hover:bg-red-200'
+                          }`}
+                        >
                             {u.isBlocked ? 'Unblock User' : 'Block User'}
                           </button>
                         )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
       )}
@@ -541,46 +549,44 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-muted text-muted-foreground font-bold uppercase tracking-wider border-b border-border">
-                  <tr>
-                    <th className="py-3 px-4">Vendor / Restaurant</th>
-                    <th className="py-3 px-4">Plan</th>
-                    <th className="py-3 px-4">Amount</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Stripe Session ID</th>
-                    <th className="py-3 px-4">Date</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {transactions.map((t) => (
-                    <tr key={t._id} className="hover:bg-muted/40 transition-colors">
-                      <td className="py-3 px-4 font-bold text-foreground">
-                        {t.vendorId?.businessName || t.vendorId?.name || 'Partner Pizzeria'}
-                      </td>
-                      <td className="py-3 px-4 uppercase font-bold text-orange-600">
-                        {t.plan}
-                      </td>
-                      <td className="py-3 px-4 font-black text-foreground">
-                        {formatCurrency(t.amount)}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 capitalize">
-                          {t.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-muted-foreground font-mono text-[10px] truncate max-w-xs">
-                        {t.stripeSessionId}
-                      </td>
-                      <td className="py-3 px-4 text-muted-foreground">
-                        {formatDate(t.createdAt)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table className="text-xs">
+              <TableHeader className="bg-muted">
+                <TableRow className="border-b border-border">
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Vendor / Restaurant</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Plan</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Amount</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Status</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Stripe Session ID</TableHead>
+                  <TableHead className="py-3 px-4 text-muted-foreground font-bold uppercase tracking-wider">Date</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-border">
+                {transactions.map((t) => (
+                  <TableRow key={t._id} className="hover:bg-muted/40 transition-colors">
+                    <TableCell className="py-3 px-4 font-bold text-foreground">
+                      {t.vendorId?.businessName || t.vendorId?.name || 'Partner Pizzeria'}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 uppercase font-bold text-orange-600">
+                      {t.plan}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 font-black text-foreground">
+                      {formatCurrency(t.amount)}
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      <Badge variant="outline" className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border-emerald-200 capitalize">
+                        {t.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-muted-foreground font-mono text-[10px] truncate max-w-xs">
+                      {t.stripeSessionId}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-muted-foreground">
+                      {formatDate(t.createdAt)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
       )}
