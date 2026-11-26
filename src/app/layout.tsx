@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Toaster } from 'sonner';
+import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'PizzaHub — Artisanal Pizza Ordering & Delivery Platform',
@@ -20,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} min-h-screen flex flex-col antialiased selection:bg-red-500 selection:text-white`}>
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+      <body className={`${geist.variable} min-h-screen flex flex-col antialiased selection:bg-red-500 selection:text-white`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
             <Navbar />
