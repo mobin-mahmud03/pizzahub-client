@@ -1,7 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 import api from '@/lib/api';
 
 export type UserRole = 'customer' | 'vendor' | 'admin';
@@ -22,8 +23,8 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (token: string, user: User) => void;
-  logout: () => void;
+  login: (token?: string, user?: User) => void;
+  logout: () => Promise<void>;
   updateUser: (updatedUser: Partial<User>) => void;
   refreshUser: () => Promise<void>;
 }
@@ -31,94 +32,93 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const { data: session, isPending, refetch } = authClient.useSession();
   const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userOverride, setUserOverride] = useState<Partial<User> | null>(null);
   const router = useRouter();
 
-  // Load user on startup from stored token
-  const loadUser = async () => {
-    try {
-      const storedToken = localStorage.getItem('pizzahub_token');
-      const storedUser = localStorage.getItem('pizzahub_user');
+  // Map session user to existing User interface shape
+  const baseUser: User | null = useMemo(() => {
+    if (!session?.user) return null;
+    const u = session.user as any;
+    return {
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      image: u.image || undefined,
+      role: (u.role as UserRole) || 'customer',
+      businessName: u.businessName || undefined,
+      subscriptionPlan: (u.subscriptionPlan as 'free' | 'premium') || 'free',
+      subscriptionExpiresAt: u.subscriptionExpiresAt
+        ? new Date(u.subscriptionExpiresAt).toISOString()
+        : undefined,
+      favorites: u.favorites || [],
+    };
+  }, [session]);
 
-      if (storedToken) {
-        setToken(storedToken);
-        if (storedUser) {
-          try {
-            setUser(JSON.parse(storedUser));
-          } catch (e) {
-            console.error('Failed to parse cached user', e);
-          }
-        }
+  const user: User | null = useMemo(() => {
+    if (!baseUser) return null;
+    if (!userOverride) return baseUser;
+    return { ...baseUser, ...userOverride };
+  }, [baseUser, userOverride]);
 
-        // Validate token with server
-        const res = await api.get('/auth/me');
-        if (res.data.success && res.data.user) {
-          setUser(res.data.user);
-          localStorage.setItem('pizzahub_user', JSON.stringify(res.data.user));
-        }
-      }
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
-        console.warn('[AuthContext] Session expired or invalid token');
-        localStorage.removeItem('pizzahub_token');
-        localStorage.removeItem('pizzahub_user');
-        setUser(null);
-        setToken(null);
-      } else {
-        console.warn('[AuthContext] Keeping cached session despite network/server error:', error?.message);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // Obtain and cache JWT token when session is present
   useEffect(() => {
-    loadUser();
-  }, []);
+    let isMounted = true;
+    if (session?.user) {
+      authClient
+        .token()
+        .then((res: any) => {
+          if (isMounted && res?.data?.token) {
+            setToken(res.data.token);
+          }
+        })
+        .catch(() => {});
+    } else {
+      setToken(null);
+      setUserOverride(null);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [session]);
 
-  const login = (newToken: string, newUser: User) => {
-    localStorage.setItem('pizzahub_token', newToken);
-    localStorage.setItem('pizzahub_user', JSON.stringify(newUser));
-    setToken(newToken);
-    setUser(newUser);
-
-    // Redirect according to role
-    if (newUser.role === 'admin') {
+  const login = (_newToken?: string, newUser?: User) => {
+    const target = newUser || user;
+    if (target?.role === 'admin') {
       router.push('/dashboard/admin');
-    } else if (newUser.role === 'vendor') {
+    } else if (target?.role === 'vendor') {
       router.push('/dashboard/vendor');
     } else {
       router.push('/dashboard/customer');
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('pizzahub_token');
-    localStorage.removeItem('pizzahub_user');
-    setToken(null);
-    setUser(null);
-    router.push('/');
+  const logout = async () => {
+    try {
+      await authClient.signOut();
+    } catch (err) {
+      console.error('[AuthContext] Error signing out', err);
+    } finally {
+      setToken(null);
+      setUserOverride(null);
+      router.push('/');
+    }
   };
 
   const updateUser = (updatedFields: Partial<User>) => {
-    if (user) {
-      const updated = { ...user, ...updatedFields };
-      setUser(updated);
-      localStorage.setItem('pizzahub_user', JSON.stringify(updated));
-    }
+    setUserOverride((prev) => ({ ...(prev || {}), ...updatedFields }));
   };
 
   const refreshUser = async () => {
     try {
+      await refetch();
       const res = await api.get('/auth/me');
-      if (res.data.success && res.data.user) {
-        setUser(res.data.user);
-        localStorage.setItem('pizzahub_user', JSON.stringify(res.data.user));
+      if (res.data?.success && res.data?.user) {
+        setUserOverride(res.data.user);
       }
     } catch (err) {
-      console.error('[AuthContext] Failed to refresh user profile', err);
+      console.warn('[AuthContext] refreshUser sync warning:', err);
     }
   };
 
@@ -127,7 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         token,
-        isLoading,
+        isLoading: isPending,
         login,
         logout,
         updateUser,
