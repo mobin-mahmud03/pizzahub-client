@@ -1,95 +1,252 @@
-# PizzaHub Client — Next.js Food Ordering Platform 🍕
+# 🍕 PizzaHub — Client
 
-PizzaHub is a pizza ordering and delivery web application built with Next.js 16 (App Router), Tailwind CSS, Framer Motion, and TypeScript. Customers discover local pizza shops, browse menus with live filters and sorting, place orders with delivery instructions, and track order status timelines. Vendors manage menus, accept/reject customer orders, and upgrade to Premium via Stripe.
+Next.js front-end for **PizzaHub**, a full-stack pizza marketplace where customers browse and order, vendors manage their menus and subscription, and admins moderate the platform.
 
-## 🚀 Live Links & Repositories
-- **Client GitHub Repository**: `https://github.com/your-username/pizzahub-client`
-- **Server GitHub Repository**: `https://github.com/your-username/pizzahub-server`
-- **Live Production Website**: `https://pizzahub.vercel.app`
+Built with **Next.js 16 App Router**, **React 19**, **Tailwind CSS v4**, and **ShadCN UI** (on Base UI primitives) — compiled with webpack and the React Compiler for optimised production builds.
 
 ---
 
-## 🌟 Important Features
-1. **Dynamic Homepage**:
-   - High-impact hero banner with Framer Motion animations.
-   - Dynamic **Featured Menu Items** (at least 6 approved database items with badges & direct ordering).
-   - Dynamic **Pizza Categories** exploring Classic, Vegetarian, Meat Lovers, Gourmet, Sides, and Desserts.
-   - Required **Why Choose PizzaHub?** section and 3-step **How PizzaHub Works**.
-2. **Browse Menu**:
-   - Live full-text search by pizza name, toppings, or ingredients.
-   - Multi-parameter filtering by Category and Location (Brooklyn, Greenwich Village, Downtown).
-   - **Challenge 1**: Ascending and descending price sorting, newest additions, and rating sort.
-   - Responsive equal-height card grid, loading skeletons, and empty states.
-3. **Item Details (`/menu/[id]`)**:
-   - Multi-image gallery with thumbnail switcher.
-   - Comprehensive description, pricing, and pizzeria profile info.
-   - Protected Food Order Modal (delivery date & address, duplicate order prevention).
-   - Customer review and 5-star rating submission.
-4. **Three Distinct Role-Based Dashboards**:
-   - **Customer Dashboard**: Overview metrics, full order history, order cancellation for pending items, and interactive **Order Status Timeline**.
-   - **Vendor Dashboard**: Overview statistics, menu item management (ImgBB image upload, Free tier 3-item limit, Premium unlimited), customer order accept/reject, and Stripe subscription upgrade.
-   - **Admin Dashboard**: Platform metrics & visual bar graphs, user management (search, role filter, block/unblock), menu item moderation (approve/reject/delete), and read-only transaction ledger.
-5. **Standout Optional Features Implemented**:
-   - ✅ **Dark / Light Mode Toggle** (via `next-themes` and CSS variables).
-   - ✅ **Customer Reviews & 5-Star Ratings** with live recalculation.
-   - ✅ **Order Status Timeline** on order details modal.
-   - ✅ **Favorites / Wishlist** customer support.
+## ✨ Features
+
+| Area | What it does |
+|---|---|
+| **Public menu** | Browse all approved pizza listings; search by keyword, filter by category & location, sort by price or rating, paginate results |
+| **Item detail** | Full item page with photo, description, vendor info, reviews, and an order-placement dialog |
+| **Authentication** | Email/password login and registration with role selection (Customer / Vendor); JWT stored and sent via Axios interceptor |
+| **Role-based routing** | `dashboard/layout.tsx` reads the session role and redirects wrong-role users; no flash during session hydration |
+| **Customer dashboard** | Overview stats, full order history with status timeline |
+| **Vendor dashboard** | Menu item CRUD (add / edit / delete / toggle active), customer order management, subscription upgrade flow |
+| **Admin dashboard** | User management (block/unblock), menu item moderation (approve/reject), transaction history |
+| **Stripe payments** | Redirect to Stripe Checkout; `payment/success` page activates premium badge; `payment/cancel` returns gracefully |
+| **Image uploads** | Photos proxied through the server to ImgBB; preview shown before submission |
+| **ShadCN UI components** | Button, Card, Input, Label, Textarea, Select, Dialog, Table, Badge, Tabs, DropdownMenu, Avatar, Skeleton — all built on Base UI |
+| **Animated UI** | Framer Motion page transitions and micro-interactions |
+| **Toast notifications** | Sonner toasts for all success, error, and info feedback |
+| **Theme support** | next-themes dark/light toggle wired to Tailwind CSS variables |
+| **Skeleton loaders** | Every data-fetching state has a Skeleton placeholder; no layout shift |
+| **Custom 404** | Catch-all `[...not_found]` route with friendly error page |
 
 ---
 
-## 🛠 Technology Stack & Dependencies
-- **Frontend Framework**: Next.js 16 (App Router)
-- **Styling**: Tailwind CSS, ShadCN design system (warm reds, oranges, cream backgrounds)
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-- **Toasts**: Sonner (No browser `alert()`)
-- **Theme**: `next-themes`
-- **HTTP Client**: Axios with JWT Bearer request interceptors
+## 🛠 Technology Stack
+
+### Runtime dependencies
+
+| Package | Version | Purpose |
+|---|---|---|
+| `next` | 16.4.6 | App Router framework; file-based routing, RSC, Image optimisation |
+| `react` | 19.3.0 | UI rendering with the React Compiler enabled |
+| `react-dom` | 19.3.0 | DOM renderer |
+| `@base-ui/react` | ^1.9.0 | Headless UI primitives underlying all ShadCN components |
+| `shadcn` | ^4.23.1 | Component CLI that scaffolds ShadCN components into `src/components/ui/` |
+| `axios` | ^1.21.1 | HTTP client; request interceptor attaches `Authorization: Bearer` header |
+| `framer-motion` | ^14.14.0 | Page and element animations |
+| `lucide-react` | ^1.77.0 | Icon set used throughout the UI |
+| `sonner` | ^2.0.8 | Toast notification library |
+| `next-themes` | ^0.4.6 | Dark/light theme management with SSR support |
+| `class-variance-authority` | ^0.7.1 | Variant-based className composition for ShadCN components |
+| `clsx` | ^2.1.1 | Conditional className utility |
+| `cn` | ^0.5.2 | Merged `clsx` + `tailwind-merge` helper (installed by ShadCN init) |
+| `tailwind-merge` | ^3.7.1 | Merges conflicting Tailwind classes safely |
+| `tw-animate-css` | ^1.4.0 | Pre-built Tailwind animation utilities |
+
+### Dev dependencies
+
+| Package | Purpose |
+|---|---|
+| `tailwindcss` | v4.3.3 — CSS-first config, no `tailwind.config.js` needed |
+| `@tailwindcss/postcss` | PostCSS plugin for Tailwind v4 |
+| `postcss` | PostCSS runner |
+| `babel-plugin-react-compiler` | Required by `reactCompiler: true` in `next.config.ts` |
+| `typescript` | Static typing |
+| `@types/node` / `@types/react` / `@types/react-dom` | Type definitions |
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── layout.tsx                     # Root layout — Geist font, ThemeProvider, Toaster
+│   ├── page.tsx                       # Home / landing page (featured items)
+│   ├── not-found.tsx                  # Next.js 404 boundary
+│   ├── [...not_found]/page.tsx        # Catch-all 404 for unmatched routes
+│   ├── auth/
+│   │   ├── login/page.tsx
+│   │   └── register/page.tsx
+│   ├── menu/
+│   │   ├── page.tsx                   # Full menu with search + filters
+│   │   └── [id]/page.tsx              # Item detail + order dialog
+│   ├── dashboard/
+│   │   ├── layout.tsx                 # Auth guard — redirects by role
+│   │   ├── customer/
+│   │   │   ├── page.tsx               # Overview + stat cards
+│   │   │   ├── orders/page.tsx        # Full order history + timeline
+│   │   │   └── profile/page.tsx
+│   │   ├── vendor/
+│   │   │   ├── page.tsx               # Overview + menu CRUD + order management
+│   │   │   └── profile/page.tsx
+│   │   └── admin/
+│   │       ├── page.tsx               # Overview + transaction history
+│   │       ├── users/page.tsx         # Block/unblock users
+│   │       └── items/page.tsx         # Approve/reject menu items
+│   ├── payment/
+│   │   ├── success/page.tsx
+│   │   └── cancel/page.tsx
+│   └── profile/page.tsx               # Shared profile settings wrapper
+├── components/
+│   ├── ui/                            # ShadCN components (do not edit manually)
+│   │   └── avatar, badge, button, card, dialog, dropdown-menu,
+│   │       input, label, select, skeleton, table, tabs, textarea
+│   ├── dashboard/
+│   │   └── ProfileSettingsForm.tsx    # Reusable profile form
+│   ├── Navbar.tsx                     # Top nav — DropdownMenu + Avatar
+│   ├── Footer.tsx
+│   ├── PizzaCard.tsx                  # Menu item card (equal-height grid)
+│   ├── StatusBadge.tsx                # Order status colour chip
+│   ├── StatsCard.tsx                  # Dashboard stat card
+│   ├── EmptyState.tsx
+│   ├── LoadingSpinner.tsx
+│   └── ThemeProvider.tsx
+├── context/
+│   └── AuthContext.tsx                # Auth state — user, token, login, logout, refreshUser
+└── lib/
+    └── api.ts                         # Axios instance with auth interceptor
+```
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+
+- Node.js 20+
+- npm 10+
+- The PizzaHub server running (or its deployed URL in `NEXT_PUBLIC_API_URL`)
+
+### Steps
+
+```bash
+# 1. Clone the repository
+git clone <CLIENT_REPO_URL>
+cd pizzahub-client
+
+# 2. Install dependencies
+npm install
+
+# 3. Create your environment file
+cp .env.example .env.local
+# Edit .env.local and fill in all required values (see Environment Variables below)
+```
+
+> [!NOTE]
+> `babel-plugin-react-compiler` is required at build time because `next.config.ts` enables `reactCompiler: true`. It is listed as a dev dependency and installed automatically with `npm install`.
+
+---
+
+## ▶️ Running Locally
+
+```bash
+# Development server (hot reload)
+npm run dev
+
+# Production build  (uses webpack — do not use --turbopack)
+npm run build
+npm start
+
+# Lint
+npm run lint
+```
+
+The app runs at `http://localhost:3000` by default.
+
+> [!IMPORTANT]
+> Always use `npm run build` (not `next build --turbopack`) — the build script passes `--webpack` explicitly because `babel-plugin-react-compiler` is not compatible with Turbopack.
+
+---
+
+## 🌐 Links
+
+| Resource | URL |
+|---|---|
+| **Live site** | `<LIVE_SITE_URL>` |
+| **Client repository** | `<CLIENT_REPO_URL>` |
+| **Server repository** | `<SERVER_REPO_URL>` |
 
 ---
 
 ## 🔐 Environment Variables
-Create a `.env.local` file in the client directory (never committed to GitHub):
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_IMGBB_API_KEY=your_imgbb_api_key_here
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-```
+
+Copy `.env.example` to `.env.local` and fill in your own values. **Never commit `.env.local`.**
+
+| Variable | Used for |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | Base URL of the Express API server (e.g. `http://localhost:5000/api`) |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key used by the Checkout redirect |
 
 ---
 
-## 🎯 Challenge Requirements Implementation
-### 1. Advanced Search and Sorting
-- Implemented in `src/app/menu/page.tsx` connecting to `GET /api/menu`:
-  - Instant query sync with `search`, `category`, `location`, and `sort` (`price_asc`, `price_desc`, `rating`, `newest`).
-  - Seamless UX with immediate loading indicators and empty state resets.
+## 🗺 Pages & Role Dashboards
 
-### 2. JWT & Token Verification Flow
-- Client attaches `Authorization: Bearer <token>` automatically on every authenticated API request via Axios interceptor in `src/lib/api.ts`.
-- Protected dashboard layout checks authenticated session on load; if page reload occurs, cached session is immediately validated with `/auth/me` to ensure user is **never redirected to Login upon reloading a private route**.
+### Public pages (no login required)
 
-### 3. Professional Recruiter-Grade Design
-- Warm pizza palette (crimson reds `#dc2626`, deep oven orange `#ea580c`, and warm cream `#fffcf8`).
-- Strict card alignment and equal aspect ratios.
-- Accessible dark/light mode and modern X social logo.
+| Route | Description |
+|---|---|
+| `/` | Home — hero section and featured pizza listings |
+| `/menu` | Full menu with live search, category/location filters, sort, and pagination |
+| `/menu/[id]` | Item detail — description, vendor info, reviews; order dialog requires login |
+| `/auth/login` | Email/password login with demo credential pills |
+| `/auth/register` | Sign-up with role selection (Customer or Vendor) |
+
+### Protected pages (login required)
+
+| Route | Access | Description |
+|---|---|---|
+| `/profile` | All roles | Shared profile settings — name, photo, business name |
+| `/payment/success` | Vendor | Stripe checkout success; activates premium badge |
+| `/payment/cancel` | Vendor | Stripe checkout cancelled; returns to subscription page |
+
+### Customer dashboard (`/dashboard/customer/*`)
+
+| Route | Description |
+|---|---|
+| `/dashboard/customer` | Overview — stat cards (orders placed, spending, favourite items) |
+| `/dashboard/customer/orders` | Full order history with expandable status timeline |
+| `/dashboard/customer/profile` | Profile settings |
+
+### Vendor dashboard (`/dashboard/vendor/*`)
+
+| Route | Description |
+|---|---|
+| `/dashboard/vendor` | Overview — stat cards, menu item CRUD (add / edit / delete / toggle active / image upload), customer order management (update status), subscription upgrade button |
+| `/dashboard/vendor/profile` | Profile and business name settings |
+
+> [!NOTE]
+> Free-plan vendors are limited to **3 active menu items**. Attempting to add a fourth shows an upgrade prompt. Premium plan is activated via Stripe Checkout and expires after one month; the server auto-downgrades on the next authenticated request.
+
+### Admin dashboard (`/dashboard/admin/*`)
+
+| Route | Description |
+|---|---|
+| `/dashboard/admin` | Overview — platform stat cards and transaction history table |
+| `/dashboard/admin/users` | User list — block or unblock any customer or vendor account |
+| `/dashboard/admin/items` | Menu item moderation — approve or reject pending submissions |
+
+### Route guards
+
+`dashboard/layout.tsx` checks the authenticated user's role **after the session has loaded**. While loading it renders a spinner — it never redirects prematurely. Once the session resolves:
+
+- Unauthenticated users → `/auth/login`
+- Wrong-role users (e.g. a customer visiting `/dashboard/vendor`) → their own dashboard
+- Correct role → content rendered
 
 ---
 
-## 🔑 Demo Login Credentials
-- **Admin**: `admin@pizzahub.com` / `Admin@123456`
-- **Vendor (Premium)**: `mario@pizzahub.com` / `Vendor@123456`
-- **Vendor (Free)**: `luigi@pizzahub.com` / `Vendor@123456`
-- **Customer**: `customer@pizzahub.com` / `Customer@123456`
-- **Stripe Test Card**: `4242 4242 4242 4242`, Expiry: `12/28`, CVC: `123`
+## 🎨 UI Component Notes
 
----
+ShadCN was initialised with the **Base UI** adapter (not Radix UI). Components live in `src/components/ui/` and use `@base-ui/react` primitives (`useRender`, `mergeProps`). Do **not** mix in Radix UI packages.
 
-## 🏃 Local Setup & Installation
-```bash
-# 1. Install dependencies
-npm install
+The `cn` helper comes from the `cn` npm package (installed by `shadcn init`), **not** from a local `@/lib/utils` file.
 
-# 2. Run local development server
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Tailwind v4 uses a CSS-first config — all theme tokens (colours, radii, fonts) are defined as CSS custom properties in `src/app/globals.css`. There is no `tailwind.config.js`.
