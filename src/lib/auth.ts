@@ -1,8 +1,10 @@
 import dns from 'node:dns';
 
-if (process.env.NODE_ENV !== 'production') {
+// Apply Google DNS on all environments — Vercel's DNS can fail to resolve
+// MongoDB Atlas SRV records without this.
+try {
   dns.setServers(['8.8.8.8', '1.1.1.1']);
-}
+} catch (_) { /* ignore in environments that don't support it */ }
 
 import { MongoClient, ObjectId } from "mongodb";
 import { betterAuth, APIError } from "better-auth";
@@ -14,10 +16,16 @@ const mongoUri = process.env.MONGODB_URI;
 if (!mongoUri) {
   console.error('[Better Auth] MONGODB_URI environment variable is missing!');
 }
+
+// Use a module-level promise so every serverless invocation waits for the
+// same connection rather than racing to open multiple.
 const client = new MongoClient(mongoUri || "mongodb://127.0.0.1:27017/pizzahub", {
-  serverSelectionTimeoutMS: 10000,
+  serverSelectionTimeoutMS: 15000,
+  connectTimeoutMS: 15000,
 });
-client.connect().catch((e) => console.error('[Mongo]', e.message));
+const connectionPromise = client.connect().catch((e) =>
+  console.error('[Mongo] initial connect error:', e.message)
+);
 const db = client.db();
 
 export const auth = betterAuth({

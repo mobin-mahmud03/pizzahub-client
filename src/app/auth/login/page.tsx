@@ -56,7 +56,11 @@ function LoginForm() {
       const userRole = (res.data?.user as any)?.role;
       redirectByRole(userRole);
     } catch (err: any) {
-      const msg = err?.message || 'Failed to sign in. Please check your credentials.';
+      // Surface the actual Better Auth error message when available
+      const msg =
+        err?.body?.message ||
+        err?.message ||
+        'Failed to sign in. Please check your credentials.';
       toast.error(msg);
     } finally {
       setIsLoading(false);
