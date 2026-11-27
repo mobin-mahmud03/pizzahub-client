@@ -10,8 +10,13 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { jwt, bearer } from "better-auth/plugins";
 import { hashPassword, verifyPassword } from "better-auth/crypto";
 
-const mongoUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/pizzahub";
-const client = new MongoClient(mongoUri);
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  console.error('[Better Auth] MONGODB_URI environment variable is missing!');
+}
+const client = new MongoClient(mongoUri || "mongodb://127.0.0.1:27017/pizzahub", {
+  serverSelectionTimeoutMS: 10000,
+});
 client.connect().catch((e) => console.error('[Mongo]', e.message));
 const db = client.db();
 
