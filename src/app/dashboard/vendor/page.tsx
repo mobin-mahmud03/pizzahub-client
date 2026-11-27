@@ -248,20 +248,12 @@ export default function VendorDashboardPage() {
   const handleUpgradeSubscription = async () => {
     try {
       const res = await api.post('/stripe/create-checkout-session');
-      if (res.data.url) {
-        window.location.href = res.data.url;
-      } else {
-        // Fallback test activation
-        const verifyRes = await api.post('/stripe/verify-test-payment', {
-          sessionId: res.data.sessionId,
-        });
-        if (verifyRes.data.success) {
-          toast.success('Subscription upgraded to Premium!');
-          refreshUser();
-        }
+      if (typeof res.data?.url !== 'string' || !res.data.url) {
+        throw new Error('The server did not return a Stripe Checkout URL.');
       }
+      window.location.href = res.data.url;
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to initiate checkout.');
+      toast.error(err.response?.data?.message || err.message || 'Failed to initiate checkout.');
     }
   };
 

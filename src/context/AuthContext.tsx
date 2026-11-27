@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import api from '@/lib/api';
@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserOverride((prev) => ({ ...(prev || {}), ...updatedFields }));
   };
 
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
     try {
       await refetch();
       const res = await api.get('/auth/me');
@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (err) {
       console.warn('[AuthContext] refreshUser sync warning:', err);
     }
-  };
+  }, [refetch]);
 
   return (
     <AuthContext.Provider

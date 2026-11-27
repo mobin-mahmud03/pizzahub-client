@@ -183,7 +183,6 @@ Copy `.env.example` to `.env.local` and fill in your own values. **Never commit 
 | Variable | Used for |
 |---|---|
 | `NEXT_PUBLIC_API_URL` | Base URL of the Express API server (e.g. `http://localhost:5000/api`) |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key used by the Checkout redirect |
 
 ---
 
@@ -223,7 +222,7 @@ Copy `.env.example` to `.env.local` and fill in your own values. **Never commit 
 | `/dashboard/vendor/profile` | Profile and business name settings |
 
 > [!NOTE]
-> Free-plan vendors are limited to **3 active menu items**. Attempting to add a fourth shows an upgrade prompt. Premium plan is activated via Stripe Checkout and expires after one month; the server auto-downgrades on the next authenticated request.
+> Free-plan vendors are limited to **3 active menu items**. Attempting to add a fourth shows an upgrade prompt. Premium access is activated by a recurring monthly Stripe subscription; the server downgrades access when the subscription period ends.
 
 ### Admin dashboard (`/dashboard/admin/*`)
 
