@@ -47,43 +47,53 @@ export default function Navbar() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background/90 border-b border-border shadow-xs transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-orange-500 flex items-center justify-center text-white shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
-            <Pizza className="w-6 h-6 animate-pulse" />
+    <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#0d0c0a]/90 border-b border-[#282420] transition-all duration-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        {/* Brand Logo - Styled like ODDAWORLD PIZZA CO. */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-500 flex items-center justify-center text-black font-black shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <Pizza className="w-5 h-5 fill-black stroke-black" />
           </div>
-          <span className="text-2xl font-black tracking-tight text-foreground font-serif">
-            Pizza<span className="text-red-600">Hub</span>
-          </span>
+          <div className="flex flex-col">
+            <span className="text-xl font-black tracking-widest uppercase text-white font-serif leading-none">
+              PIZZAHUB
+            </span>
+            <span className="text-[9px] uppercase font-bold tracking-[0.25em] text-[#9a9085] mt-1">
+              PIZZA CO.
+            </span>
+          </div>
         </Link>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-8">
+        {/* Desktop Nav Links - Styled exactly like the pill container in reference */}
+        <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-full bg-[#181613] border border-[#2c2722]">
           <Link
             href="/"
-            className={`text-sm font-medium transition-colors hover:text-red-600 ${
-              isActive('/') ? 'text-red-600 font-semibold' : 'text-foreground/80'
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all ${
+              isActive('/')
+                ? 'bg-amber-500 text-black shadow-xs font-black'
+                : 'text-[#9a9085] hover:text-white'
             }`}
           >
-            Home
+            <span>🏠 Home</span>
           </Link>
           <Link
             href="/menu"
-            className={`text-sm font-medium transition-colors hover:text-red-600 ${
-              isActive('/menu') ? 'text-red-600 font-semibold' : 'text-foreground/80'
+            className={`px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all ${
+              isActive('/menu')
+                ? 'bg-amber-500 text-black shadow-xs font-black'
+                : 'text-[#9a9085] hover:text-white'
             }`}
           >
-            Browse Menu
+            Menu
           </Link>
-
-          {/* Role specific links in header if logged in */}
+          {/* Role specific link if logged in */}
           {user && (
             <Link
               href={getDashboardLink()}
-              className={`text-sm font-medium transition-colors hover:text-red-600 ${
-                pathname.startsWith('/dashboard') ? 'text-red-600 font-semibold' : 'text-foreground/80'
+              className={`px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all ${
+                pathname.startsWith('/dashboard')
+                  ? 'bg-amber-500 text-black shadow-xs font-black'
+                  : 'text-[#9a9085] hover:text-white'
               }`}
             >
               Dashboard
@@ -91,66 +101,61 @@ export default function Navbar() {
           )}
         </nav>
 
-        {/* Right actions: Theme toggle + Auth */}
+        {/* Right actions: Search icon, Cart badge, User Account */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Dark / Light Toggle */}
-          <button
-            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-            className="p-2.5 rounded-full hover:bg-muted text-foreground/80 transition-colors cursor-pointer"
-            title="Toggle theme"
-            aria-label="Toggle theme"
+          <Link
+            href="/menu"
+            className="w-10 h-10 rounded-full flex items-center justify-center text-[#9a9085] hover:text-white hover:bg-[#1f1b17] transition-all"
+            title="Search menu"
           >
-            {mounted ? (resolvedTheme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-700" />) : <span className="block w-5 h-5" />}
-          </button>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </Link>
 
           {/* User Logged In state */}
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-3 p-1.5 pr-3 rounded-full border border-border hover:bg-muted/80 transition-all cursor-pointer outline-none">
-                <Avatar className="w-8 h-8 border border-red-500/30">
+              <DropdownMenuTrigger className="flex items-center gap-2 p-1.5 rounded-full border border-[#2c2722] bg-[#181613] hover:bg-[#221e1a] transition-all cursor-pointer outline-none">
+                <Avatar className="w-8 h-8 border border-amber-500/40">
                   {user.image && <AvatarImage src={user.image} alt={user.name} />}
-                  <AvatarFallback className="bg-red-100 dark:bg-red-950 text-red-600 font-bold text-sm">
+                  <AvatarFallback className="bg-amber-500 text-black font-black text-xs">
                     {user.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <div className="text-left">
-                  <div className="text-xs font-semibold text-foreground leading-tight">{user.name.split(' ')[0]}</div>
-                  <div className="text-[10px] text-muted-foreground capitalize">{user.role}</div>
-                </div>
-                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                <ChevronDown className="w-3.5 h-3.5 text-[#9a9085] mr-1" />
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-56 rounded-2xl bg-card border border-border shadow-xl p-2 z-50">
-                <div className="px-3 py-2 border-b border-border/60">
-                  <p className="text-sm font-bold text-foreground truncate">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                  <Badge variant="outline" className="mt-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-400 border-transparent">
+              <DropdownMenuContent align="end" className="w-56 rounded-2xl bg-[#151311] border border-[#282420] shadow-2xl p-2 z-50 text-white">
+                <div className="px-3 py-2 border-b border-[#282420]">
+                  <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                  <p className="text-xs text-[#9a9085] truncate">{user.email}</p>
+                  <Badge className="mt-1.5 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-md bg-amber-500/20 text-amber-400 border-amber-500/30">
                     {user.role}
                   </Badge>
                 </div>
 
                 <DropdownMenuItem
                   onClick={() => router.push(getDashboardLink())}
-                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors cursor-pointer w-full mt-1"
+                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-[#9a9085] hover:text-white hover:bg-[#201c18] rounded-xl transition-colors cursor-pointer w-full mt-1"
                 >
-                  <LayoutDashboard className="w-4 h-4 text-red-500" />
+                  <LayoutDashboard className="w-4 h-4 text-amber-500" />
                   <span>Dashboard</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
                   onClick={() => router.push('/profile')}
-                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-foreground/80 hover:bg-muted rounded-md transition-colors cursor-pointer w-full"
+                  className="flex items-center gap-2.5 px-3 py-2 text-sm text-[#9a9085] hover:text-white hover:bg-[#201c18] rounded-xl transition-colors cursor-pointer w-full"
                 >
-                  <Settings className="w-4 h-4 text-orange-500" />
+                  <Settings className="w-4 h-4 text-stone-400" />
                   <span>Profile Settings</span>
                 </DropdownMenuItem>
 
-                <DropdownMenuSeparator className="border-t border-border/60 my-1" />
+                <DropdownMenuSeparator className="border-t border-[#282420] my-1" />
 
                 <DropdownMenuItem
                   onClick={() => logout()}
-                  variant="destructive"
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-md transition-colors text-left cursor-pointer"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-500 hover:bg-red-500/10 rounded-xl transition-colors text-left cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Sign Out</span>
@@ -158,17 +163,19 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            /* Logged Out state */
             <div className="flex items-center gap-3">
               <Link
                 href="/auth/login"
-                className="px-4 py-2 text-sm font-medium text-foreground hover:text-red-600 transition-colors"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-[#9a9085] hover:text-white hover:bg-[#1f1b17] transition-all"
+                title="Sign In"
               >
-                Sign In
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
               </Link>
               <Link
                 href="/auth/register"
-                className="px-5 py-2 text-sm font-semibold rounded-full bg-gradient-to-r from-red-600 to-orange-500 text-white shadow-md shadow-red-500/20 hover:from-red-700 hover:to-orange-600 hover:shadow-lg transition-all"
+                className="px-5 py-2.5 rounded-full font-black text-xs uppercase tracking-wider text-black bg-amber-500 hover:bg-amber-400 shadow-md shadow-amber-500/20 transition-all cursor-pointer"
               >
                 Sign Up
               </Link>

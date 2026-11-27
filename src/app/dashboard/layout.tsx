@@ -86,7 +86,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   href="/dashboard/customer"
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                     pathname === '/dashboard/customer'
-                      ? 'bg-red-600 text-white font-bold shadow-md shadow-red-500/20'
+                      ? 'bg-orange-600 text-white font-bold shadow-xs'
                       : 'text-foreground/80 hover:bg-muted'
                   }`}
                 >
@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   href="/menu"
                   className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-foreground/80 hover:bg-muted transition-all"
                 >
-                  <Pizza className="w-4 h-4" />
+                  <Pizza className="w-4 h-4 text-orange-600" />
                   <span>Order New Pizza</span>
                 </Link>
               </>
@@ -109,7 +109,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   href="/dashboard/vendor"
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                     pathname === '/dashboard/vendor'
-                      ? 'bg-orange-600 text-white font-bold shadow-md shadow-orange-500/20'
+                      ? 'bg-orange-600 text-white font-bold shadow-xs'
                       : 'text-foreground/80 hover:bg-muted'
                   }`}
                 >
@@ -125,11 +125,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   href="/dashboard/admin"
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                     pathname === '/dashboard/admin'
-                      ? 'bg-red-600 text-white font-bold shadow-md shadow-red-500/20'
+                      ? 'bg-stone-800 text-white dark:bg-stone-100 dark:text-stone-900 font-bold shadow-xs'
                       : 'text-foreground/80 hover:bg-muted'
                   }`}
                 >
-                  <ShieldCheck className="w-4 h-4" />
+                  <ShieldCheck className="w-4 h-4 text-orange-500" />
                   <span>Admin Control Center</span>
                 </Link>
               </>

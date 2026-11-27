@@ -139,15 +139,12 @@ function LoginForm() {
             <span>Continue with Google</span>
           </Button>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground font-semibold">
-                Or continue with email
-              </span>
-            </div>
+          <div className="flex items-center gap-3" aria-label="Divider">
+            <span className="h-px flex-1 bg-border" />
+            <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Or continue with email
+            </span>
+            <span className="h-px flex-1 bg-border" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -188,13 +185,13 @@ function LoginForm() {
             <Button
               type="submit"
               disabled={isLoading || isGoogleLoading}
-              className="w-full h-11 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full h-11 rounded-2xl font-bold text-xs uppercase tracking-wider text-white bg-orange-600 hover:bg-orange-700 shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <LogIn className="w-5 h-5" />
+                  <LogIn className="w-4 h-4" />
                   <span>Sign In</span>
                 </>
               )}
@@ -202,30 +199,30 @@ function LoginForm() {
           </form>
 
           {/* Quick Demo Credentials pill buttons */}
-          <div className="pt-4 border-t border-border/80">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground mb-3">
+          <div className="pt-4 border-t border-border/70">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground mb-3">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>Quick Demo Access (Click to Fill):</span>
             </div>
-            <div className="grid grid-cols-3 gap-2 text-xs">
+            <div className="grid grid-cols-3 gap-2.5 text-xs">
               <button
                 type="button"
                 onClick={() => handleQuickLogin('admin@pizzahub.com', 'Admin@123456', 'Admin')}
-                className="py-1.5 px-2 rounded-lg border border-red-500/30 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 transition-colors cursor-pointer"
+                className="py-2 px-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-muted/60 hover:bg-stone-100 dark:hover:bg-stone-800 text-foreground font-semibold transition-all cursor-pointer text-center"
               >
                 Admin
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickLogin('mario@pizzahub.com', 'Vendor@123456', 'Vendor')}
-                className="py-1.5 px-2 rounded-lg border border-orange-500/30 bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 font-medium hover:bg-orange-100 transition-colors cursor-pointer"
+                className="py-2 px-2.5 rounded-xl border border-orange-500/20 bg-orange-50/60 dark:bg-orange-950/30 hover:bg-orange-100/80 text-orange-700 dark:text-orange-400 font-semibold transition-all cursor-pointer text-center"
               >
                 Vendor
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickLogin('customer@pizzahub.com', 'Customer@123456', 'Customer')}
-                className="py-1.5 px-2 rounded-lg border border-amber-500/30 bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 font-medium hover:bg-amber-100 transition-colors cursor-pointer"
+                className="py-2 px-2.5 rounded-xl border border-emerald-500/20 bg-emerald-50/60 dark:bg-emerald-950/30 hover:bg-emerald-100/80 text-emerald-700 dark:text-emerald-400 font-semibold transition-all cursor-pointer text-center"
               >
                 Customer
               </button>

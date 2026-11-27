@@ -1,45 +1,26 @@
 @import "tailwindcss";
 
 @layer base {
-  :root {
-    --background: #fffcf8;
-    --foreground: #2b1810;
-    --card: #ffffff;
-    --card-foreground: #2b1810;
-    --popover: #ffffff;
-    --popover-foreground: #2b1810;
-    --primary: #dc2626; /* Crimson / Warm Pizza Red */
-    --primary-foreground: #ffffff;
-    --secondary: #ea580c; /* Deep Orange */
-    --secondary-foreground: #ffffff;
-    --accent: #fef3c7; /* Warm Cream */
-    --accent-foreground: #78350f;
-    --muted: #fef7ee;
-    --muted-foreground: #78665c;
-    --border: #f3e8df;
-    --input: #f3e8df;
-    --ring: #dc2626;
-    --radius: 0.75rem;
-  }
-
+  :root,
   .dark {
-    --background: #140d0a;
-    --foreground: #fef7ee;
-    --card: #1e1410;
-    --card-foreground: #fef7ee;
-    --popover: #1e1410;
-    --popover-foreground: #fef7ee;
-    --primary: #ef4444;
-    --primary-foreground: #ffffff;
-    --secondary: #f97316;
+    --background: #0d0c0a; /* Jet charcoal / matte dark black from reference */
+    --foreground: #f4ede4; /* Warm cream text */
+    --card: #151311;       /* Deep charcoal card background */
+    --card-foreground: #f4ede4;
+    --popover: #151311;
+    --popover-foreground: #f4ede4;
+    --primary: #f59e0b;    /* Warm Golden Amber (#F59E0B / #F5A623) from reference */
+    --primary-foreground: #000000;
+    --secondary: #e11d48;  /* Vibrant Pizza Red accent */
     --secondary-foreground: #ffffff;
-    --accent: #2c1a12;
-    --accent-foreground: #fef3c7;
-    --muted: #241712;
-    --muted-foreground: #a89a90;
-    --border: #38241b;
-    --input: #38241b;
-    --ring: #ef4444;
+    --accent: #211c18;     /* Dark warm stone accent */
+    --accent-foreground: #f59e0b;
+    --muted: #1d1a17;
+    --muted-foreground: #9a9085;
+    --border: #282420;
+    --input: #282420;
+    --ring: #f59e0b;
+    --radius: 1.25rem;
   }
 }
 
@@ -47,23 +28,41 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-feature-settings: "rlig" 1, "calt" 1;
+  letter-spacing: -0.015em;
+  background-image: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.05) 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Reference Typography helper */
+.font-display {
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.03em;
+}
+
+/* Smooth Glows & Shadow Accents */
+.shadow-amber-glow {
+  box-shadow: 0 10px 30px -5px rgba(245, 158, 11, 0.35);
+}
+
+.shadow-card-dark {
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.8), 0 4px 10px -2px rgba(0, 0, 0, 0.5);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0d0c0a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ea580c33;
-  border-radius: 4px;
+  background: #f59e0b44;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ea580c66;
+  background: #f59e0b88;
 }

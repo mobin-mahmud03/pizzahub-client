@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import PizzaCard from '@/components/PizzaCard';
 
 interface MenuItem {
   _id: string;
@@ -105,221 +106,202 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col gap-16 md:gap-24 pb-16">
-      {/* 1. HERO BANNER SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-red-600/10 via-orange-500/5 to-transparent pt-12 md:pt-20 pb-16 border-b border-border/50">
+      {/* 1. HERO BANNER SECTION - ODDAWORLD THEME */}
+      <section className="relative overflow-hidden bg-[#0d0c0a] pt-8 md:pt-16 pb-20 border-b border-[#282420]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Headline & CTA */}
+            {/* Left Headline & Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="lg:col-span-7 space-y-6 text-center lg:text-left"
+              className="lg:col-span-6 space-y-6 text-left"
             >
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 text-xs font-bold uppercase tracking-wider">
-                <Flame className="w-4 h-4 fill-current animate-bounce" />
-                <span>Wood-Fired & Delivered Hot</span>
+              {/* Tagline: HOT. FRESH. DELICIOUS. */}
+              <div className="text-xs font-black tracking-[0.25em] text-[#9a9085] uppercase">
+                HOT. FRESH. <span className="text-red-500">DELICIOUS.</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-foreground font-serif tracking-tight leading-[1.1]">
-                Hot & Fresh Pizza <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-orange-500 to-amber-500">
-                  Delivered to Your Door
-                </span>
+              {/* Bold Condensed Headline: FEEL THE PERFECT SLICE */}
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white uppercase tracking-tight leading-[0.95] font-sans">
+                FEEL THE <br />
+                <span className="text-amber-500">PERFECT</span> SLICE
               </h1>
 
-              <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Connect with neighborhood artisan pizzerias. From authentic Neapolitan wood-fired pies to hearty deep dishes, discover your next favorite slice in minutes.
+              <p className="text-sm sm:text-base text-[#9a9085] max-w-md leading-relaxed font-normal">
+                Handcrafted pizzas made with premium ingredients and baked to perfection in authentic wood-fired ovens.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              {/* Action Buttons: ORDER NOW -> & Watch Our Story */}
+              <div className="flex flex-wrap items-center gap-5 pt-2">
                 <Link
                   href="/menu"
-                  className="w-full sm:w-auto px-8 py-4 rounded-full font-bold text-base text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-xl shadow-red-500/25 hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                  className="px-7 py-3.5 rounded-full font-black text-xs uppercase tracking-wider text-black bg-amber-500 hover:bg-amber-400 shadow-amber-glow hover:scale-105 transition-all flex items-center gap-2 group cursor-pointer"
                 >
-                  <span>Explore Pizza Menu</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <span>ORDER NOW</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
 
                 <Link
-                  href="/auth/register"
-                  className="w-full sm:w-auto px-7 py-4 rounded-full font-semibold text-base text-foreground border border-border hover:bg-muted transition-all text-center"
+                  href="/menu"
+                  className="flex items-center gap-3 text-white hover:text-amber-400 transition-colors group cursor-pointer"
                 >
-                  Partner as Restaurant
+                  <div className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center group-hover:scale-110 group-hover:bg-amber-500 transition-all shadow-md">
+                    <svg className="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-black tracking-wide uppercase">Watch Our Story</span>
+                    <span className="text-[10px] text-[#9a9085]">Play video</span>
+                  </div>
                 </Link>
               </div>
 
-              {/* Trust Badges */}
-              <div className="pt-6 grid grid-cols-3 gap-4 border-t border-border/80">
-                <div className="flex flex-col">
-                  <span className="text-2xl font-black text-red-600">30 Min</span>
-                  <span className="text-xs text-muted-foreground">Average Delivery</span>
+              {/* 4 Feature Badges from Reference: Fresh Ingredients, Wood Fired, Fast Delivery, Best Quality */}
+              <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-[#221e1a]">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5 text-amber-500 text-xs font-bold">
+                    <span>🍃</span>
+                    <span className="text-white text-xs font-bold">Fresh Ingredients</span>
+                  </div>
+                  <span className="text-[10px] text-[#9a9085]">Premium & Natural</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-black text-orange-500">100%</span>
-                  <span className="text-xs text-muted-foreground">Fresh Dough & Sauce</span>
+
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5 text-amber-500 text-xs font-bold">
+                    <span>🔥</span>
+                    <span className="text-white text-xs font-bold">Wood Fired</span>
+                  </div>
+                  <span className="text-[10px] text-[#9a9085]">Authentic Taste</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-black text-amber-500">4.9 ★</span>
-                  <span className="text-xs text-muted-foreground">Customer Satisfaction</span>
+
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5 text-amber-500 text-xs font-bold">
+                    <span>🛵</span>
+                    <span className="text-white text-xs font-bold">Fast Delivery</span>
+                  </div>
+                  <span className="text-[10px] text-[#9a9085]">30 Min. Guarantee</span>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5 text-amber-500 text-xs font-bold">
+                    <span>⚙️</span>
+                    <span className="text-white text-xs font-bold">Best Quality</span>
+                  </div>
+                  <span className="text-[10px] text-[#9a9085]">Always Fresh</span>
                 </div>
               </div>
             </motion.div>
 
-            {/* Right Hero Image */}
+            {/* Right Hero Image - Cheese Pull Pizza on Wooden Board */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="lg:col-span-5 relative"
+              className="lg:col-span-6 relative flex justify-center lg:justify-end"
             >
-              <div className="relative mx-auto w-72 h-72 sm:w-96 sm:h-96 rounded-full p-3 bg-gradient-to-tr from-red-500 to-amber-400 shadow-2xl shadow-orange-500/20">
+              <div className="relative w-full max-w-[520px]">
+                {/* 100% Satisfaction Guarantee Stamp from reference */}
+                <div className="absolute top-4 right-4 z-10 w-20 h-20 rounded-full border border-dashed border-amber-500/70 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center text-center p-1.5 shadow-xl">
+                  <span className="text-[8px] uppercase tracking-widest text-[#9a9085]">PREMIUM QUALITY</span>
+                  <span className="text-xs font-black text-amber-400 leading-none my-0.5">100%</span>
+                  <span className="text-[8px] uppercase tracking-widest text-[#9a9085]">SATISFACTION</span>
+                </div>
+
                 <img
-                  src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800"
-                  alt="Delicious Hot Pizza"
-                  className="w-full h-full object-cover rounded-full shadow-inner animate-[spin_60s_linear_infinite]"
+                  src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1000"
+                  alt="Delicious Hot Pizza Slice Cheese Pull"
+                  className="w-full h-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.9)] rounded-3xl"
                 />
               </div>
-
-              {/* Floating review card */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="absolute -bottom-4 -left-4 sm:left-4 bg-card/95 backdrop-blur-md p-4 rounded-2xl border border-border shadow-xl flex items-center gap-3"
-              >
-                <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-950 flex items-center justify-center text-red-600 font-bold">
-                  🍕
-                </div>
-                <div>
-                  <div className="flex items-center gap-1 text-amber-400 text-xs">
-                    {'★'.repeat(5)}
-                  </div>
-                  <p className="text-xs font-bold text-foreground">Best Crust in New York!</p>
-                  <p className="text-[10px] text-muted-foreground">Over 1,200+ Reviews</p>
-                </div>
-              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 2. DYNAMIC SECTION 1: FEATURED MENU ITEMS */}
+      {/* 2. DYNAMIC SECTION 1: OUR TOP PICKS (Exact match to reference) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#221e1a]">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 uppercase tracking-wider mb-2">
-              <Sparkles className="w-4 h-4" />
-              <span>Handpicked Specials</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground font-serif tracking-tight">
-              Featured Menu Items
+            <span className="text-xs font-black uppercase tracking-[0.25em] text-[#9a9085]">
+              HANDCRAFTED SPECIALS
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-sans mt-0.5">
+              OUR TOP PICKS
             </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Top-rated oven specials from our certified artisan kitchens
-            </p>
           </div>
           <Link
             href="/menu"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700 mt-4 md:mt-0 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-500 hover:text-amber-400 uppercase tracking-wider transition-colors"
           >
-            <span>View All Items</span>
-            <ChevronRight className="w-4 h-4" />
+            <span>View All Menu</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
         {/* Loading Skeleton */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="rounded-3xl border border-border bg-card p-4 space-y-4 h-full flex flex-col justify-between">
-                <Skeleton className="w-full h-48 rounded-2xl" />
-                <div className="space-y-2 flex-1">
-                  <Skeleton className="h-5 w-3/4 rounded-md" />
-                  <Skeleton className="h-4 w-1/2 rounded-md" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-3xl border border-[#282420] bg-[#151311] p-4 space-y-4">
+                <Skeleton className="w-full h-44 rounded-2xl bg-[#221e1a]" />
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-3/4 rounded-md bg-[#221e1a]" />
+                  <Skeleton className="h-4 w-1/2 rounded-md bg-[#221e1a]" />
                 </div>
-                <Skeleton className="h-10 w-full rounded-xl" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-            {featuredItems.map((item, idx) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+            {featuredItems.slice(0, 4).map((item, idx) => (
               <motion.div
                 key={item._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="group flex flex-col justify-between rounded-3xl border border-border bg-card overflow-hidden shadow-sm hover:shadow-xl hover:border-red-500/30 transition-all duration-300 h-full"
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                className="h-full"
               >
-                {/* Image & Badges */}
-                <div className="relative h-56 w-full shrink-0 overflow-hidden bg-muted">
-                  <img
-                    src={item.images[0] || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800'}
-                    alt={item.itemName}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                    <Badge variant="outline" className="px-3 py-1 rounded-full text-xs font-bold bg-background/90 backdrop-blur-md text-foreground shadow-xs border-transparent">
-                      {item.category}
-                    </Badge>
-                    {item.vendorId?.subscriptionPlan === 'premium' && (
-                      <Badge className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow-xs flex items-center gap-1 border-transparent">
-                        <Award className="w-3.5 h-3.5" />
-                        <span>Premium</span>
-                      </Badge>
-                    )}
-                  </div>
-
-                  <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full text-xs font-bold bg-background/90 backdrop-blur-md text-foreground shadow-xs flex items-center gap-1">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span>{item.averageRating > 0 ? item.averageRating : '4.8'}</span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex flex-col flex-1 justify-between gap-4">
-                  <div className="flex flex-col flex-1">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <h3 className="text-xl font-bold text-foreground group-hover:text-red-600 transition-colors truncate">
-                        {item.itemName}
-                      </h3>
-                      <span className="text-lg font-black text-red-600 shrink-0">
-                        {formatCurrency(item.price)}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3 flex-1">
-                      {item.description}
-                    </p>
-
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2 border-t border-border/60 mt-auto">
-                      <div className="flex items-center gap-1 truncate">
-                        <MapPin className="w-3.5 h-3.5 text-red-500 shrink-0" />
-                        <span className="truncate">{item.location}</span>
-                      </div>
-                      {item.vendorId && (
-                        <div className="truncate font-medium text-foreground/80">
-                          by {item.vendorId.businessName || item.vendorId.name}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <Link
-                    href={`/menu/${item._id}`}
-                    className="w-full py-2.5 px-4 rounded-xl font-bold text-sm text-center text-white bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 shadow-md shadow-red-500/20 hover:shadow-lg transition-all"
-                  >
-                    View Details & Order
-                  </Link>
-                </div>
+                <PizzaCard item={item} />
               </motion.div>
             ))}
           </div>
         )}
       </section>
 
-      {/* 3. DYNAMIC SECTION 2: PIZZA CATEGORIES */}
+      {/* 3. SPECIAL DEAL FOR YOU BANNER (From reference) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#3e0f13] via-[#240c0f] to-[#120a0b] border border-red-950/60 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-red-600/20 border border-red-500/40 flex items-center justify-center text-amber-400 shrink-0">
+              <span className="text-2xl font-black">%</span>
+            </div>
+            <div>
+              <span className="text-lg sm:text-xl font-black text-white uppercase tracking-tight block">
+                SPECIAL DEAL FOR YOU!
+              </span>
+              <p className="text-xs sm:text-sm text-[#d4b5b7] mt-0.5">
+                Get <span className="text-amber-400 font-bold">20% OFF</span> on your first order
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="px-5 py-2.5 rounded-full border border-dashed border-amber-500/80 bg-black/40 text-amber-400 text-xs font-black tracking-widest uppercase">
+              USE CODE: PIZZA20
+            </div>
+            <Link
+              href="/menu"
+              className="px-6 py-2.5 rounded-full font-black text-xs uppercase tracking-wider text-black bg-amber-500 hover:bg-amber-400 transition-all cursor-pointer"
+            >
+              CLAIM NOW →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. DYNAMIC SECTION 2: PIZZA CATEGORIES */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 uppercase tracking-wider mb-2">
