@@ -1,3 +1,9 @@
+import dns from 'node:dns';
+
+if (process.env.NODE_ENV !== 'production') {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+}
+
 import { MongoClient, ObjectId } from "mongodb";
 import { betterAuth, APIError } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
@@ -6,6 +12,7 @@ import { hashPassword, verifyPassword } from "better-auth/crypto";
 
 const mongoUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/pizzahub";
 const client = new MongoClient(mongoUri);
+client.connect().catch((e) => console.error('[Mongo]', e.message));
 const db = client.db();
 
 export const auth = betterAuth({
